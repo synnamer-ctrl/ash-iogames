@@ -303,7 +303,7 @@ export class TownScene extends WorldScene {
       },
       plantFlower: (flower, bed, s) => {
         if (!bed) return false;
-        const half = (bed.w / 2 - 26) * bed.baseScale;
+        const half = (bed.aw / 2 - 26) * bed.baseScale;
         const x = Phaser.Math.Clamp(flower.x, bed.x - half, bed.x + half);
         const footY = bed.y - 4 * bed.baseScale;
         flower.setPosition(x, footY - (flower.h / 2) * flower.baseScale);
@@ -501,7 +501,7 @@ function driveUpdate(o: InteractiveObject, s: TownScene, dt: number): void {
   const dir = (o.persistentState.dir as number) || 1;
   const max = (SPEEDS[o.def.type] ?? 120) * o.baseScale;
   let target = max;
-  const front = o.x + (dir * o.w * o.baseScale) / 2;
+  const front = o.x + (dir * o.aw * o.baseScale) / 2;
   // traffic lights
   for (const l of s.ofType('traffic_light')) {
     const state = l.persistentState.light;
@@ -521,7 +521,7 @@ function driveUpdate(o: InteractiveObject, s: TownScene, dt: number): void {
   // keep a gap to the vehicle ahead in the same lane
   for (const other of s.withTag('vehicle')) {
     if (other === o || Math.abs(other.footY() - o.footY()) > 20) continue;
-    const gap = (other.x - o.x) * dir - ((o.w * o.baseScale + other.w * other.baseScale) / 2);
+    const gap = (other.x - o.x) * dir - ((o.aw * o.baseScale + other.aw * other.baseScale) / 2);
     if (gap > -20 && gap < 40) target = 0;
   }
   const accel = target > speed ? 160 : 420;
@@ -532,6 +532,6 @@ function driveUpdate(o: InteractiveObject, s: TownScene, dt: number): void {
   const r = (wheels[0]?.displayWidth ?? 44) / 2;
   for (const w of wheels) if (w) w.angle += ((ns * dt) / 1000 / r) * (180 / Math.PI);
   if (!s.reducedMotion) o.bouncer.y = o.h / 2 + Math.sin(s.time.now / 60) * 0.8;
-  if (o.x > 1600 + 200 + o.w / 2) o.x = -200 - o.w / 2;
-  if (o.x < -200 - o.w / 2) o.x = 1600 + 200 + o.w / 2;
+  if (o.x > 1600 + 200 + o.aw / 2) o.x = -200 - o.aw / 2;
+  if (o.x < -200 - o.aw / 2) o.x = 1600 + 200 + o.aw / 2;
 }

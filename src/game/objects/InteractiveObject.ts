@@ -26,7 +26,8 @@ export class InteractiveObject extends Phaser.GameObjects.Container {
   stackOrder = 0;
   /** Runtime-only scratch data for behaviours (never saved). */
   runtime: Record<string, unknown> = {};
-  readonly w: number;
+  /** Art width in asset pixels (`w` is taken by Phaser's Transform). */
+  readonly aw: number;
   readonly h: number;
   private idleTweens: Phaser.Tweens.Tween[] = [];
 
@@ -37,7 +38,7 @@ export class InteractiveObject extends Phaser.GameObjects.Container {
     this.persistentState = { ...(def.state ?? {}), ...saved.state };
     this.baseScale = saved.scale;
     const size = assetSize(def.key);
-    this.w = size.w;
+    this.aw = size.w;
     this.h = size.h;
 
     // the bouncer pivots at the object's base so squashes look grounded
@@ -53,7 +54,7 @@ export class InteractiveObject extends Phaser.GameObjects.Container {
     for (const p of def.parts ?? []) {
       const at = typeof p.at === 'string' ? assetAnchor(def.key, p.at) : p.at;
       if (!at) throw new Error(`Missing anchor ${String(p.at)} on ${def.key}`);
-      const img = new Phaser.GameObjects.Image(scene, at[0] - this.w / 2, at[1] - this.h / 2, p.key);
+      const img = new Phaser.GameObjects.Image(scene, at[0] - this.aw / 2, at[1] - this.h / 2, p.key);
       InteractiveObject.fitTexture(img, p.key);
       if (p.origin) img.setOrigin(p.origin[0], p.origin[1]);
       img.setVisible(p.visible ?? true);
@@ -64,7 +65,7 @@ export class InteractiveObject extends Phaser.GameObjects.Container {
 
     this.setRotation(saved.rotation);
     this.setScale(this.baseScale);
-    this.setSize(this.w, this.h);
+    this.setSize(this.aw, this.h);
     this.setDepth(saved.depth);
     this.setupHitArea();
   }
@@ -86,9 +87,9 @@ export class InteractiveObject extends Phaser.GameObjects.Container {
     if (this.def.interactions.length === 0) return;
     const hit = this.def.hit ?? { shape: 'ellipse' as const };
     const minPx = 76;
-    const hw = Math.max(minPx / 2, (this.w * (hit.fw ?? 0.9)) / 2);
+    const hw = Math.max(minPx / 2, (this.aw * (hit.fw ?? 0.9)) / 2);
     const hh = Math.max(minPx / 2, (this.h * (hit.fh ?? 0.9)) / 2);
-    const cx = this.w / 2 + (hit.ox ?? 0), cy = this.h / 2 + (hit.oy ?? 0);
+    const cx = this.aw / 2 + (hit.ox ?? 0), cy = this.h / 2 + (hit.oy ?? 0);
     if (hit.shape === 'rect') this.setInteractive(new Phaser.Geom.Rectangle(cx - hw, cy - hh, hw * 2, hh * 2), Phaser.Geom.Rectangle.Contains);
     else this.setInteractive(new Phaser.Geom.Ellipse(cx, cy, hw * 2, hh * 2), Phaser.Geom.Ellipse.Contains);
   }
@@ -120,17 +121,17 @@ export class InteractiveObject extends Phaser.GameObjects.Container {
 
   /** Approximate world-space radius for proximity checks. */
   radius(): number {
-    return (Math.max(this.w, this.h) / 2) * this.baseScale;
+    return (Math.max(this.aw, this.h) / 2) * this.baseScale;
   }
 
   worldBounds(): Phaser.Geom.Rectangle {
-    const w = this.w * this.baseScale, h = this.h * this.baseScale;
+    const w = this.aw * this.baseScale, h = this.h * this.baseScale;
     return new Phaser.Geom.Rectangle(this.x - w / 2, this.y - h / 2, w, h);
   }
 
   /** Convert a point in main-asset pixel space to world space. */
   assetToWorld(ax: number, ay: number): Vec2 {
-    const lx = (ax - this.w / 2) * this.art.scaleX;
+    const lx = (ax - this.aw / 2) * this.art.scaleX;
     const ly = ay - this.h / 2;
     const m = this.getWorldTransformMatrix();
     return { x: m.getX(lx, ly), y: m.getY(lx, ly) };

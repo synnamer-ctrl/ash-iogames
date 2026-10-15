@@ -33,6 +33,8 @@ interface Gesture {
   dragging: boolean;
   panning: boolean;
   longPressed: boolean;
+  /** Edge auto-pan only starts once the finger has been away from the screen edge. */
+  edgeArmed?: boolean;
   timer?: Phaser.Time.TimerEvent;
 }
 
@@ -49,7 +51,7 @@ const EDGE = 0.07;
  */
 export class InteractionSystem {
   private gestures = new Map<number, Gesture>();
-  private pinchStart: { dist: number } | null = null;
+  private pinchStart: { dist: number; mid: Vec2 } | null = null;
 
   constructor(private readonly scene: Phaser.Scene, private readonly host: InteractionHost) {
     const input = scene.input;
@@ -122,7 +124,7 @@ export class InteractionSystem {
     const bg = this.backgroundPointers();
     if (bg.length >= 2) {
       const [a, b] = bg as [Gesture, Gesture];
-      this.pinchStart = { dist: Math.max(1, Math.hypot(a.lastScreen.x - b.lastScreen.x, a.lastScreen.y - b.lastScreen.y)) };
+      this.pinchStart = { dist: Math.max(1, Math.hypot(a.lastScreen.x - b.lastScreen.x, a.lastScreen.y - b.lastScreen.y)), mid: { x: (a.lastScreen.x + b.lastScreen.x) / 2, y: (a.lastScreen.y + b.lastScreen.y) / 2 } };
       for (const g of bg) g.moved = true;
     } else {
       this.pinchStart = null;
@@ -151,8 +153,11 @@ export class InteractionSystem {
           if (bg.length >= 2) {
             const [a, b] = bg as [Gesture, Gesture];
             const d = Math.max(1, Math.hypot(a.lastScreen.x - b.lastScreen.x, a.lastScreen.y - b.lastScreen.y));
-            this.host.rig.zoomAt(d / this.pinchStart.dist, (a.lastScreen.x + b.lastScreen.x) / 2, (a.lastScreen.y + b.lastScreen.y) / 2);
-            this.pinchStart.dist = d;
+            const mid = { x: (a.lastScreen.x + b.lastScreen.x) / 2, y: (a.lastScreen.y + b.lastScreen.y) / 2 };
+            // two fingers: pinch to zoom and move together to pan
+            this.host.rig.panBy(mid.x - this.pinchStart.mid.x, mid.y - this.pinchStart.mid.y);
+            this.host.rig.zoomAt(d / this.pinchStart.dist, mid.x, mid.y);
+            this.pinchStart = { dist: d, mid };
           }
           return;
         }
@@ -251,6 +256,11 @@ export class InteractionSystem {
     for (const g of this.gestures.values()) {
       if (!(g.dragging && g.obj)) continue;
       const { x, y } = g.lastScreen;
+      const inEdge = x < cam.width * EDGE || x > cam.width * (1 - EDGE) || y < cam.height * EDGE || y > cam.height * (1 - EDGE);
+      if (!g.edgeArmed) {
+        if (!inEdge) g.edgeArmed = true;
+        continue;
+      }
       let vx = 0, vy = 0;
       if (x < cam.width * EDGE) vx = 1;
       else if (x > cam.width * (1 - EDGE)) vx = -1;

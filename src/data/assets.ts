@@ -23,7 +23,7 @@ const COMMON: AssetKey[] = [
 const EXTRA: Record<WorldId, AssetKey[]> = {
   town: ['moon', 'sun_face_happy', 'cloud_rain', 'bird_down', 'mailbox_open', 'cat_sleep', 'treat_croissant', 'treat_cupcake', 'treat_donut', 'treat_cookie', 'flower_red', 'flower_yellow', 'flower_blue'],
   garden: ['sun_face_happy', 'cloud_rain', 'bird_down', 'rainbow', 'hedgehog_ball', 'apple', 'plant_seed', 'plant_sprout', 'plant_bud_tulip', 'plant_bud_sun', 'plant_bud_daisy', 'plant_bloom_tulip', 'plant_bloom_sun', 'plant_bloom_daisy', 'soil'],
-  workshop: [],
+  workshop: ['icon_redo', 'icon_plus'],
   build: ['ball_red', 'pinwheel_stick', 'seesaw_base'],
 };
 

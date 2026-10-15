@@ -506,7 +506,7 @@ export abstract class WorldScene extends Phaser.Scene implements InteractionHost
     o.setDepth(HELD_DEPTH);
     this.anim.lift(o);
     this.sfx('pickup', { pitch: Phaser.Math.FloatBetween(0.95, 1.08) });
-    const sh = this.add.ellipse(o.x, o.footY() + 4, o.w * 0.7 * o.baseScale, 22 * o.baseScale, 0x38454a, 0.16).setDepth(HELD_DEPTH - 1);
+    const sh = this.add.ellipse(o.x, o.footY() + 4, o.aw * 0.7 * o.baseScale, 22 * o.baseScale, 0x38454a, 0.16).setDepth(HELD_DEPTH - 1);
     this.shadows.set(o.id, sh);
     this.behaviorOf(o).dragStart?.(o, this);
   }
@@ -694,7 +694,7 @@ export abstract class WorldScene extends Phaser.Scene implements InteractionHost
 }
 
 // -------------------------------------------------------------------- common behaviours
-const tapSound = (s: WorldScene, o: InteractiveObject) => s.sfx('tap', { pitch: Phaser.Math.Clamp(140 / Math.max(o.w, o.h), 0.6, 1.5) });
+const tapSound = (s: WorldScene, o: InteractiveObject) => s.sfx('tap', { pitch: Phaser.Math.Clamp(140 / Math.max(o.aw, o.h), 0.6, 1.5) });
 
 export const COMMON_BEHAVIORS: BehaviorMap = {
   wiggle: {
@@ -725,7 +725,7 @@ export const COMMON_BEHAVIORS: BehaviorMap = {
       s.anim.squash(o);
       s.sfx('rain');
       const ground = s.groundTop !== null ? s.groundTop + 260 : o.y + 500;
-      s.fx.rain(() => ({ x: o.x + o.art.x, y: o.y + o.h * 0.3, w: o.w * 0.75 }), 2600, ground);
+      s.fx.rain(() => ({ x: o.x + o.art.x, y: o.y + o.h * 0.3, w: o.aw * 0.75 }), 2600, ground);
       s.time.delayedCall(2700, () => {
         if (!o.active) return;
         o.runtime.raining = false;
@@ -784,7 +784,7 @@ function flap(o: InteractiveObject, s: WorldScene, on: boolean): void {
 export function perchPoint(target: InteractiveObject): Vec2 {
   if (target.def.type === 'streetlight') return target.assetToWorld(56, 14);
   const k = target.baseScale;
-  return { x: target.x + Phaser.Math.Between(-target.w * 0.18, target.w * 0.18) * k, y: target.y - target.h * 0.34 * k };
+  return { x: target.x + Phaser.Math.Between(-target.aw * 0.18, target.aw * 0.18) * k, y: target.y - target.h * 0.34 * k };
 }
 
 export function perchOn(o: InteractiveObject, target: InteractiveObject, s: WorldScene, animate = true): void {

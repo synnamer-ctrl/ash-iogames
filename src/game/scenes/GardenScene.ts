@@ -68,7 +68,7 @@ export class GardenScene extends WorldScene {
   onRainStart(cloud: InteractiveObject): void {
     this.discover('garden.rain', cloud.pos);
     const cx = cloud.x + cloud.art.x;
-    if (Math.abs(cx - POND.cx) < POND.rx + cloud.w * 0.3) {
+    if (Math.abs(cx - POND.cx) < POND.rx + cloud.aw * 0.3) {
       for (let i = 0; i < 6; i++) {
         this.time.delayedCall(250 + i * 380, () => this.fx.ripple(POND.cx + Phaser.Math.Between(-POND.rx * 0.6, POND.rx * 0.6), POND.cy + Phaser.Math.Between(-30, 30), 1));
       }
@@ -80,7 +80,7 @@ export class GardenScene extends WorldScene {
     const cx = cloud.x + cloud.art.x;
     let grew = false;
     for (const soil of this.ofType('soil')) {
-      if (Math.abs(soil.x - cx) < cloud.w * 0.5 * cloud.baseScale + 30) grew = this.grow(soil) || grew;
+      if (Math.abs(soil.x - cx) < cloud.aw * 0.5 * cloud.baseScale + 30) grew = this.grow(soil) || grew;
     }
     if (grew) this.commit();
   }
@@ -232,7 +232,7 @@ export class GardenScene extends WorldScene {
               s.commit();
             },
           });
-          for (const b of s.ofType('bird')) if (Math.abs(b.x - o.x) < o.w * 0.5 * k && b.y < o.y) s.time.delayedCall(150, () => s.behaviorOf(b).tap?.(b, s, b.pos));
+          for (const b of s.ofType('bird')) if (Math.abs(b.x - o.x) < o.aw * 0.5 * k && b.y < o.y) s.time.delayedCall(150, () => s.behaviorOf(b).tap?.(b, s, b.pos));
         },
       },
       rabbit: {
@@ -457,7 +457,7 @@ function swimUpdate(o: InteractiveObject, s: WorldScene, dt: number, speed: numb
   if (!inPond(foot)) return;
   const dir = (o.runtime.dir as number | undefined) ?? 1;
   const nx = o.x + (dir * speed * dt) / 1000;
-  if (!inPond({ x: nx + dir * o.w * 0.4, y: foot.y }, -10)) {
+  if (!inPond({ x: nx + dir * o.aw * 0.4, y: foot.y }, -10)) {
     o.runtime.dir = -dir;
     return;
   }

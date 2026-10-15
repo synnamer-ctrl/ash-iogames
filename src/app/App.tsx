@@ -86,6 +86,9 @@ export function App() {
           toast(e.kind === 'quota' ? 'Storage is full — your changes may not be kept.' : 'This browser can’t keep your changes automatically.', 'error');
         }
       }),
+      bridge.on('limit', ({ type }) => {
+        if (type === 'paint') toast('The paper is full of paint! Start a new page to keep drawing.', 'error');
+      }),
       discoveryStore.on('changed', (s) => setFound(new Set(s))),
     ];
     void discoveryStore.load();

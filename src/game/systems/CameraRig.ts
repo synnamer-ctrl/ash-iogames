@@ -12,6 +12,9 @@ export class CameraRig {
   private userZoom = 1;
   readonly maxUserZoom = 2.4;
 
+  /** Optional: never zoom in so far that less than this many world pixels fit across. */
+  minVisibleWidth = 0;
+
   constructor(private readonly scene: Phaser.Scene, private readonly dims: WorldDims) {
     this.center = { x: dims.w / 2, y: dims.h / 2 };
     scene.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
@@ -24,7 +27,8 @@ export class CameraRig {
   }
 
   get baseZoom(): number {
-    return computeBaseZoom(this.scene.scale.width, this.scene.scale.height, this.dims);
+    const z = computeBaseZoom(this.scene.scale.width, this.scene.scale.height, this.dims);
+    return this.minVisibleWidth > 0 ? Math.min(z, this.scene.scale.width / this.minVisibleWidth) : z;
   }
 
   layout(): void {

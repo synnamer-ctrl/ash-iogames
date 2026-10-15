@@ -145,13 +145,14 @@ export class GameHost implements GameController {
   }
 
   /** Test/debug helper: objects with their on-screen (CSS pixel) positions. */
-  debugObjects(): { id: string; type: string; x: number; y: number; sx: number; sy: number; depth: number; state: Record<string, unknown> }[] {
+  debugObjects(): { id: string; type: string; x: number; y: number; sx: number; sy: number; depth: number; texture: string; textureOk: boolean; state: Record<string, unknown> }[] {
     const scene = this.active();
     if (!scene) return [];
     const out = [];
     for (const o of scene.objects.values()) {
       const p = this.worldToScreen(o.x, o.y);
-      out.push({ id: o.id, type: o.def.type, x: o.x, y: o.y, sx: p.x, sy: p.y, depth: o.depth, state: { ...o.persistentState } });
+      const texture = o.main.texture.key;
+      out.push({ id: o.id, type: o.def.type, x: o.x, y: o.y, sx: p.x, sy: p.y, depth: o.depth, texture, textureOk: this.game.textures.exists(texture) && texture !== '__MISSING', state: { ...o.persistentState } });
     }
     return out;
   }

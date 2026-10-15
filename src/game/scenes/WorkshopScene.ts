@@ -54,6 +54,10 @@ export class WorkshopScene extends WorldScene {
     this.add.image(PAPER.x, PAPER.y, PAINT_KEY).setOrigin(0).setDisplaySize(PAPER.w, PAPER.h).setDepth(20);
     this.createHandles();
     this.zones = [{ name: 'paper', contains: (p) => this.onPaper(p) }];
+    // on narrow screens keep the whole sheet of paper (plus a sliver of desk) in view
+    this.rig.minVisibleWidth = PAPER.w + 120;
+    this.rig.layout();
+    this.cameras.main.setBackgroundColor('#E6BE8A');
   }
 
   private onPaper(p: Vec2): boolean {
@@ -206,7 +210,7 @@ export class WorkshopScene extends WorldScene {
     const hs = 1 / Math.max(0.5, zoom);
     const place = (h: Phaser.GameObjects.Image, ax: number, ay: number) => {
       const c = Math.cos(o.rotation), s = Math.sin(o.rotation);
-      const lx = ax * o.w * 0.5 * o.baseScale + 18 * hs * Math.sign(ax), ly = ay * o.h * 0.5 * o.baseScale + 18 * hs * Math.sign(ay);
+      const lx = ax * o.aw * 0.5 * o.baseScale + 18 * hs * Math.sign(ax), ly = ay * o.h * 0.5 * o.baseScale + 18 * hs * Math.sign(ay);
       h.setPosition(o.x + lx * c - ly * s, o.y + lx * s + ly * c).setScale(hs);
       const ic = h.getData('icon') as Phaser.GameObjects.Image;
       ic.setPosition(h.x, h.y).setScale((assetSize(ic.texture.key as AssetKey).w / ic.frame.width) * 0.62 * hs);
@@ -292,7 +296,7 @@ export class WorkshopScene extends WorldScene {
             const pupil = o.parts[name];
             const at = assetAnchor(o.def.key, name);
             if (!pupil || !at) continue;
-            const base = { x: at[0] - o.w / 2, y: at[1] - o.h / 2 };
+            const base = { x: at[0] - o.aw / 2, y: at[1] - o.h / 2 };
             if (o.runtime.spinning) continue;
             const a = Math.atan2(w.y - o.y, w.x - o.x) - o.rotation;
             pupil.setPosition(base.x + Math.cos(a) * 9, base.y + Math.sin(a) * 9);
@@ -311,7 +315,7 @@ export class WorkshopScene extends WorldScene {
                 const at = assetAnchor(o.def.key, name);
                 const pupil = o.parts[name];
                 if (!at || !pupil) continue;
-                pupil.setPosition(at[0] - o.w / 2 + Math.cos(t + (name === 'pupilB' ? 1 : 0)) * 9, at[1] - o.h / 2 + Math.sin(t) * 9);
+                pupil.setPosition(at[0] - o.aw / 2 + Math.cos(t + (name === 'pupilB' ? 1 : 0)) * 9, at[1] - o.h / 2 + Math.sin(t) * 9);
               }
             },
           });

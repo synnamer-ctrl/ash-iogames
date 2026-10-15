@@ -48,7 +48,7 @@ export class BuildScene extends WorldScene {
     this.matter.add.rectangle(W + BX + 60, 0, 120, 4000, { isStatic: true, label: 'wall' });
     this.matter.world.on('collisionstart', this.onCollision, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.matter.world.off('collisionstart', this.onCollision, this);
+      this.matter?.world?.off('collisionstart', this.onCollision, this);
       this.settleTimer?.remove();
       this.settleTimer = null;
     });
@@ -88,16 +88,16 @@ export class BuildScene extends WorldScene {
     if (ph.chamfer) opts.chamfer = { radius: ph.chamfer * k };
     let shape: Phaser.Types.Physics.Matter.MatterSetBodyConfig;
     o.bouncer.x = 0;
-    if (ph.shape === 'circle') shape = { type: 'circle', radius: (ph.r ?? o.w / 2) * k };
+    if (ph.shape === 'circle') shape = { type: 'circle', radius: (ph.r ?? o.aw / 2) * k };
     else if (ph.shape === 'verts' && ph.verts) {
-      const pts = ph.verts.map(([x, y]) => [flip > 0 ? x : o.w - x, y] as [number, number]);
+      const pts = ph.verts.map(([x, y]) => [flip > 0 ? x : o.aw - x, y] as [number, number]);
       const c = polygonCentroid(pts);
       // Matter centres the body on the centroid: shift the art to match
-      o.bouncer.x = -(c.x - o.w / 2);
+      o.bouncer.x = -(c.x - o.aw / 2);
       o.bouncer.y = o.h / 2 - (c.y - o.h / 2);
       o.runtime.centroid = c;
       shape = { type: 'fromVerts', verts: pts.map(([x, y]) => ({ x: (x - c.x) * k, y: (y - c.y) * k })) };
-    } else shape = { type: 'rectangle', width: (ph.w ?? o.w) * k, height: (ph.h ?? o.h) * k };
+    } else shape = { type: 'rectangle', width: (ph.w ?? o.aw) * k, height: (ph.h ?? o.h) * k };
     this.matter.add.gameObject(o, { ...opts, shape } as Phaser.Types.Physics.Matter.MatterBodyConfig);
     const body = this.bodyOf(o)!;
     this.Body.setPosition(body, { x: saved.x, y: saved.y });
@@ -118,7 +118,7 @@ export class BuildScene extends WorldScene {
     o.runtime.follower = follower;
     o.once(Phaser.GameObjects.Events.DESTROY, () => {
       follower.destroy();
-      if (this.matter?.world) this.matter.world.removeConstraint(c);
+      if (this.matter?.world?.localWorld) this.matter.world.removeConstraint(c);
     });
     this.syncFollower(o);
   }
@@ -350,7 +350,7 @@ export class BuildScene extends WorldScene {
       ball: {
         tap: (o, s) => {
           nudge(o, Phaser.Math.FloatBetween(-7, 7), -13);
-          s.sfx('boing', { pitch: 1 + 30 / o.w });
+          s.sfx('boing', { pitch: 1 + 30 / o.aw });
         },
       },
       toyCar: {
