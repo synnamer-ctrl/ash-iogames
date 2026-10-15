@@ -1,0 +1,104 @@
+/* Little Wonder World — UI art bible: cream paper, deep-ink outlines, soft pastel fills. */
+:root {
+  --cream: #fff7e8;
+  --paper: #fffdf7;
+  --paper-deep: #f3e7cf;
+  --sky: #9eddf5;
+  --leaf: #9bcf8a;
+  --sun: #ffd66b;
+  --coral: #f58f83;
+  --lavender: #c5b5f0;
+  --ink: #38454a;
+  --ink-soft: #5b6a6f;
+  --shadow: 0 4px 0 rgba(56, 69, 74, 0.18);
+  --shadow-lg: 0 8px 0 rgba(56, 69, 74, 0.14), 0 18px 40px rgba(56, 69, 74, 0.18);
+  --wobble: 52% 48% 55% 45% / 48% 55% 45% 52%;
+  --wobble-card: 28px 34px 30px 26px / 30px 26px 34px 28px;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --font: 'Fredoka Variable', 'Fredoka', ui-rounded, 'SF Pro Rounded', 'Nunito', system-ui, sans-serif;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+body {
+  position: fixed;
+  inset: 0;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input {
+  font: inherit;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 4px solid #4e9fc0;
+  outline-offset: 3px;
+}
+
+.paper {
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(rgba(176, 140, 90, 0.07) 1px, transparent 1.2px),
+    radial-gradient(rgba(176, 140, 90, 0.05) 1px, transparent 1.2px);
+  background-size: 7px 7px, 11px 11px;
+  background-position: 0 0, 3px 5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
