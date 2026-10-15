@@ -1,0 +1,18 @@
+{
+  "world": { "w": 1600, "h": 1000, "bleedX": 200, "bleedY": 125 },
+  "town": {
+    "road": { "x": -200, "y": 770, "w": 2000, "h": 135 },
+    "lanes": [808, 874],
+    "sidewalkTop": 690,
+    "crosswalkX": 700,
+    "lowerSidewalk": 905
+  },
+  "garden": {
+    "pond": { "cx": 1180, "cy": 800, "rx": 255, "ry": 100 },
+    "meadowTop": 520
+  },
+  "workshop": {
+    "paper": { "x": 250, "y": 100, "w": 1100, "h": 720 }
+  },
+  "build": { "floorY": 900 }
+}
