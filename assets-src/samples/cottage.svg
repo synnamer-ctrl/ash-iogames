@@ -1,93 +1,70 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 400" width="420" height="400">
   <title>Cottage</title>
   <defs>
-    <linearGradient id="wall" x1="0" y1="0" x2="0.4" y2="1">
-      <stop offset="0" stop-color="#FFF6E2"/>
-      <stop offset="0.7" stop-color="#FBDDB8"/>
-      <stop offset="1" stop-color="#F3C9A0"/>
+    <linearGradient id="wall" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#FFF0D6"/>
+      <stop offset="1" stop-color="#F9D7B0"/>
     </linearGradient>
-    <linearGradient id="roof" x1="0" y1="0" x2="0.3" y2="1">
-      <stop offset="0" stop-color="#FBA89C"/>
-      <stop offset="0.6" stop-color="#F58F83"/>
+    <linearGradient id="roof" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#F9988C"/>
       <stop offset="1" stop-color="#E2706A"/>
     </linearGradient>
     <linearGradient id="door" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#B7D5F2"/>
+      <stop offset="0" stop-color="#A9C9EE"/>
       <stop offset="1" stop-color="#7FA8D6"/>
     </linearGradient>
-    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#F3FBFF"/>
-      <stop offset="1" stop-color="#9EDDF5"/>
-    </linearGradient>
     <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="5" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" result="warp"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="9" result="grain"/>
-      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.3  0 0 0 0 0.24  0 0 0 0 0.18  0 0 0 0.16 0" result="grainA"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.05 0" result="grainA"/>
       <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
       <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
     </filter>
-    <filter id="blur1"><feGaussianBlur stdDeviation="1.4"/></filter>
     <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
-    <clipPath id="wallClip"><path d="M78 196 L78 350 C78 360 84 366 94 366 L326 366 C336 366 342 360 342 350 L342 196 Z"/></clipPath>
-    <clipPath id="roofClip"><path d="M50 206 C100 160 150 118 210 72 C262 116 318 162 370 206 C356 216 336 214 324 208 L96 208 C84 214 64 216 50 206 Z"/></clipPath>
   </defs>
-  <ellipse cx="210" cy="386" rx="186" ry="13" fill="#38454A" opacity="0.14" filter="url(#soft)"/>
+  <ellipse cx="210" cy="384" rx="186" ry="14" fill="#38454A" opacity="0.14" filter="url(#soft)"/>
   <g filter="url(#wc)">
-    <!-- chimney with brick rows -->
-    <path d="M284 80 L306 80 L306 138 L284 138 Z" fill="#D08A74" stroke="#8E5F4E" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M280 74 L310 74" stroke="#8E5F4E" stroke-width="6" stroke-linecap="round"/>
-    <path d="M284 98 h22 M284 116 h22" stroke="#8E5F4E" stroke-width="1.6" opacity="0.6"/>
+    <!-- chimney -->
+    <path d="M286 76 L306 76 L306 136 L286 136 Z" fill="#C9826E" stroke="#8E5F4E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M280 72 L312 72" stroke="#8E5F4E" stroke-width="5" stroke-linecap="round"/>
     <!-- walls -->
-    <path d="M78 196 L78 350 C78 360 84 366 94 366 L326 366 C336 366 342 360 342 350 L342 196 Z" fill="url(#wall)"/>
-    <g clip-path="url(#wallClip)">
-      <path d="M78 330 C150 320 230 336 342 326 L342 366 L78 366 Z" fill="#E9B98E" opacity="0.55"/>
-      <path d="M96 250 C120 244 130 252 150 248" fill="none" stroke="#F9D3A8" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
-      <path d="M332 210 L352 210 L352 370 L332 370 Z" fill="#E7B08A" opacity="0.6"/>
-    </g>
-    <path d="M78 196 L78 350 C78 360 84 366 94 366 L326 366 C336 366 342 360 342 350 L342 196 Z" fill="none" stroke="#8E5F4E" stroke-width="3.6" stroke-linejoin="round"/>
+    <path d="M78 196 L78 350 C78 360 84 366 94 366 L326 366 C336 366 342 360 342 350 L342 196 Z" fill="url(#wall)" stroke="#8E5F4E" stroke-width="3.6" stroke-linejoin="round"/>
     <!-- stone base -->
+    <path d="M78 330 C140 324 220 336 342 328 L342 366 L94 366 C84 366 78 360 78 350 Z" fill="#E7C3A0" opacity="0.8"/>
     <path d="M100 344 h22 M146 344 h30 M200 346 h24 M250 344 h30 M296 346 h20" stroke="#B8917A" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
-    <!-- roof -->
-    <path d="M50 206 C100 160 150 118 210 72 C262 116 318 162 370 206 C356 216 336 214 324 208 L96 208 C84 214 64 216 50 206 Z" fill="url(#roof)"/>
-    <g clip-path="url(#roofClip)">
-      <path d="M60 200 C120 210 300 210 360 200" fill="none" stroke="#C9544C" stroke-width="12" opacity="0.4" filter="url(#blur1)"/>
-    </g>
-    <path d="M50 206 C100 160 150 118 210 72 C262 116 318 162 370 206 C356 216 336 214 324 208 L96 208 C84 214 64 216 50 206 Z" fill="none" stroke="#8E4A40" stroke-width="3.6" stroke-linejoin="round"/>
+    <!-- roof with a soft overhang -->
+    <path d="M52 204 C100 160 150 118 210 74 C262 116 316 160 368 204 C356 214 336 212 324 206 L96 206 C84 212 64 214 52 204 Z" fill="url(#roof)" stroke="#8E4A40" stroke-width="3.6" stroke-linejoin="round"/>
     <g stroke="#B9544C" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8">
-      <path d="M120 182 q12 8 24 0 M150 168 q12 8 24 0 M180 154 q12 8 24 0 M214 148 q12 8 24 0 M246 160 q12 8 24 0 M276 174 q12 8 24 0"/>
+      <path d="M120 180 q12 8 24 0 M150 166 q12 8 24 0 M180 152 q12 8 24 0 M214 146 q12 8 24 0 M246 158 q12 8 24 0 M276 172 q12 8 24 0"/>
     </g>
-    <path d="M122 186 C160 158 190 130 214 96" fill="none" stroke="#FFD8D0" stroke-width="7" stroke-linecap="round" opacity="0.85"/>
+    <path d="M122 186 C160 158 190 130 214 96" fill="none" stroke="#FFD0C8" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
     <!-- round attic window -->
-    <circle cx="210" cy="178" r="16" fill="url(#glass)" stroke="#8E5F4E" stroke-width="3"/>
-    <path d="M210 162 v32 M194 178 h32" stroke="#8E5F4E" stroke-width="2"/>
-    <path d="M200 170 C202 166 206 165 210 165" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
-    <!-- arched door with panel and glow -->
+    <circle cx="210" cy="176" r="15" fill="#CFEFFA" stroke="#8E5F4E" stroke-width="3"/>
+    <path d="M210 161 v30 M195 176 h30" stroke="#8E5F4E" stroke-width="2" opacity="0.8"/>
+    <!-- arched door -->
     <path d="M176 366 L176 296 C176 262 226 262 226 296 L226 366 Z" fill="url(#door)" stroke="#4F6F98" stroke-width="3.4" stroke-linejoin="round"/>
-    <path d="M186 300 C186 280 216 280 216 300" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
-    <path d="M186 318 v30 M216 318 v30" stroke="#4F6F98" stroke-width="1.8" opacity="0.5"/>
-    <circle cx="218" cy="334" r="4.5" fill="#FFD66B" stroke="#8E5F4E" stroke-width="1.8"/>
-    <!-- windows: glass, frame, sill and flowers -->
-    <rect x="108" y="234" width="50" height="46" rx="8" fill="url(#glass)" stroke="#8E5F4E" stroke-width="3.2"/>
+    <path d="M186 300 C186 280 216 280 216 300" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+    <circle cx="216" cy="334" r="4" fill="#FFD66B" stroke="#8E5F4E" stroke-width="1.8"/>
+    <!-- left window with flower box -->
+    <rect x="108" y="234" width="50" height="46" rx="8" fill="#CFEFFA" stroke="#8E5F4E" stroke-width="3.2"/>
     <path d="M133 234 v46 M108 257 h50" stroke="#8E5F4E" stroke-width="2.4"/>
-    <path d="M116 244 C118 240 124 240 126 244" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
-    <rect x="102" y="280" width="62" height="12" rx="5" fill="#B98255" stroke="#5E3B26" stroke-width="2"/>
-    <circle cx="112" cy="274" r="6.5" fill="#F58F83" stroke="#8E4A40" stroke-width="1.5"/>
-    <circle cx="128" cy="270" r="6.5" fill="#FFD66B" stroke="#8E5F4E" stroke-width="1.5"/>
-    <circle cx="146" cy="274" r="6.5" fill="#C5B5F0" stroke="#6B5A9E" stroke-width="1.5"/>
-    <rect x="262" y="234" width="56" height="50" rx="8" fill="url(#glass)" stroke="#8E5F4E" stroke-width="3.2"/>
+    <rect x="102" y="280" width="62" height="12" rx="5" fill="#B98255" stroke="#6B4530" stroke-width="2"/>
+    <circle cx="112" cy="274" r="6" fill="#F58F83" stroke="#8E4A40" stroke-width="1.5"/>
+    <circle cx="128" cy="270" r="6" fill="#FFD66B" stroke="#8E5F4E" stroke-width="1.5"/>
+    <circle cx="146" cy="274" r="6" fill="#C5B5F0" stroke="#6B5A9E" stroke-width="1.5"/>
+    <!-- right window -->
+    <rect x="262" y="234" width="56" height="50" rx="8" fill="#CFEFFA" stroke="#8E5F4E" stroke-width="3.2"/>
     <path d="M290 234 v50 M262 259 h56" stroke="#8E5F4E" stroke-width="2.4"/>
-    <path d="M270 244 C272 240 278 240 280 244" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+    <path d="M262 226 l0 -4 M318 226 l0 -4" stroke="#FFFFFF" stroke-width="0"/>
   </g>
-  <!-- bushes with leaf texture and blossoms -->
+  <!-- bushes and flowers -->
   <g filter="url(#wc)">
-    <path d="M18 372 C10 346 40 326 62 336 C70 316 104 316 112 340 C134 340 146 368 126 380 L24 380 C16 380 14 376 18 372 Z" fill="#9BCF8A" stroke="#3F6E42" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M330 376 C324 350 350 332 372 340 C382 322 412 326 412 350 C414 370 404 378 392 378 L340 380 C334 380 330 378 330 376 Z" fill="#9BCF8A" stroke="#3F6E42" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M40 350 C52 340 66 342 74 352" fill="none" stroke="#D5EFC0" stroke-width="5" stroke-linecap="round"/>
-    <path d="M346 352 C356 344 368 346 376 354" fill="none" stroke="#D5EFC0" stroke-width="5" stroke-linecap="round"/>
-    <circle cx="44" cy="346" r="5.5" fill="#F58F83" stroke="#38454A" stroke-width="1.4"/>
-    <circle cx="82" cy="342" r="5.5" fill="#FFD66B" stroke="#38454A" stroke-width="1.4"/>
-    <circle cx="362" cy="356" r="5.5" fill="#FFFFFF" stroke="#38454A" stroke-width="1.4"/>
-    <circle cx="396" cy="360" r="5.5" fill="#C5B5F0" stroke="#38454A" stroke-width="1.4"/>
+    <path d="M18 372 C10 346 40 326 62 336 C70 316 104 316 112 340 C134 340 146 368 126 380 L24 380 C16 380 14 376 18 372 Z" fill="#9BCF8A" stroke="#4E7F4E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M330 376 C324 350 350 332 372 340 C382 322 412 326 412 350 C414 370 404 378 392 378 L340 380 C334 380 330 378 330 376 Z" fill="#9BCF8A" stroke="#4E7F4E" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="44" cy="346" r="5" fill="#F58F83" stroke="#38454A" stroke-width="1.4"/>
+    <circle cx="82" cy="342" r="5" fill="#FFD66B" stroke="#38454A" stroke-width="1.4"/>
+    <circle cx="362" cy="356" r="5" fill="#FFFFFF" stroke="#38454A" stroke-width="1.4"/>
+    <circle cx="396" cy="360" r="5" fill="#C5B5F0" stroke="#38454A" stroke-width="1.4"/>
   </g>
 </svg>
