@@ -340,7 +340,8 @@ function arm(c, w, h, coat, skin) {
 
 function blink(c, w, h, skin, glasses = false) {
   let out = c.flat(c.rect(1, 1, w - 2, h - 2, 6, 0.2), skin);
-  out += c.ink(`M${w / 2 - 17} ${h / 2} q4 3.5 8 0 M${w / 2 + 9} ${h / 2} q4 3.5 8 0`, { w: 2.4 });
+  // closed lids are drawn heavier when the eyes sit behind glasses, so the blink reads at game size
+  out += c.ink(`M${w / 2 - 17} ${h / 2} q4 3.5 8 0 M${w / 2 + 9} ${h / 2} q4 3.5 8 0`, { w: glasses ? 3.6 : 2.4 });
   if (glasses) out += c.ink(c.blob(w / 2 - 13, h / 2, 9, 8, { n: 10, j: 0.01 }), { w: 2 }) + c.ink(c.blob(w / 2 + 13, h / 2, 9, 8, { n: 10, j: 0.01 }), { w: 2 });
   return out;
 }
