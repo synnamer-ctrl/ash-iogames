@@ -93,19 +93,28 @@ export function bush(c, w, h, { flowers = P.pink } = {}) {
 export function bird(c, w, h, wingUp, body = '#8EC9F0') {
   let out = '';
   const bodyS = c.blob(w * 0.48, h * 0.56, w * 0.3, h * 0.3, { n: 12, j: 0.03 });
-  // tail
-  out += c.paint(c.poly([[w * 0.2, h * 0.5], [w * 0.04, h * 0.36], [w * 0.08, h * 0.62]], { r: 4 }), darken(body, 0.15), { sw: 2.4, texture: false });
+  // tail with feather lines
+  out += c.paint(c.poly([[w * 0.2, h * 0.5], [w * 0.04, h * 0.34], [w * 0.1, h * 0.64]], { r: 4 }), darken(body, 0.15), { sw: 2.4, texture: false });
+  out += c.ink(`M${f(w * 0.16)} ${f(h * 0.5)} l-8 -4 M${f(w * 0.14)} ${f(h * 0.54)} l-7 2`, { w: 1.4, color: P.ink, opacity: 0.5 });
+  // legs (for the perched and standing pose)
+  out += c.ink(`M${f(w * 0.46)} ${f(h * 0.8)} l-1 ${f(h * 0.12)} M${f(w * 0.56)} ${f(h * 0.8)} l1 ${f(h * 0.12)}`, { w: 2.2, color: P.orange, opacity: 1 });
+  // body and a lighter belly
   out += c.paint(bodyS, body, { sw: 2.8 });
-  out += c.paint(c.blob(w * 0.55, h * 0.66, w * 0.15, h * 0.13), P.cream, { sw: 0, stroke: false, texture: false, highlight: false });
-  // beak
+  out += c.flat(c.blob(w * 0.52, h * 0.7, w * 0.19, h * 0.12, { n: 10, j: 0.04 }), P.cream, 0.95);
+  // beak with a shaded lower half
   out += c.paint(c.poly([[w * 0.74, h * 0.46], [w * 0.92, h * 0.53], [w * 0.74, h * 0.6]], { r: 3, j: 0.3 }), P.orange, { sw: 2.2, texture: false, highlight: false });
-  out += `<ellipse cx="${f(w * 0.63)}" cy="${f(h * 0.46)}" rx="3.4" ry="4.2" fill="${P.ink}"/><circle cx="${f(w * 0.64)}" cy="${f(h * 0.44)}" r="1.2" fill="#fff"/>`;
+  out += c.ink(`M${f(w * 0.75)} ${f(h * 0.54)} L${f(w * 0.9)} ${f(h * 0.53)}`, { w: 1.2, color: P.woodDeep, opacity: 0.6 });
+  // eye with a glint and a soft brow
+  out += `<ellipse cx="${f(w * 0.63)}" cy="${f(h * 0.46)}" rx="3.6" ry="4.4" fill="${P.ink}"/><circle cx="${f(w * 0.645)}" cy="${f(h * 0.44)}" r="1.3" fill="#fff"/>`;
+  out += c.ink(`M${f(w * 0.58)} ${f(h * 0.39)} q${f(w * 0.04)} ${f(-h * 0.04)} ${f(w * 0.09)} ${f(-h * 0.01)}`, { w: 1.6, color: P.ink, opacity: 0.7 });
   out += `<ellipse cx="${f(w * 0.6)}" cy="${f(h * 0.58)}" rx="4" ry="2.6" fill="${P.coral}" opacity=".5"/>`;
-  // wing
+  // wing with feather tips
   const wing = wingUp
     ? c.poly([[w * 0.3, h * 0.5], [w * 0.36, h * 0.06], [w * 0.56, h * 0.48]], { r: 8, rr: [6, 10, 6] })
     : c.poly([[w * 0.28, h * 0.52], [w * 0.5, h * 0.94], [w * 0.58, h * 0.56]], { r: 8, rr: [6, 10, 6] });
   out += c.paint(wing, darken(body, 0.12), { sw: 2.4, texture: false });
+  if (wingUp) out += c.ink(`M${f(w * 0.36)} ${f(h * 0.36)} q${f(w * 0.08)} ${f(-h * 0.08)} ${f(w * 0.16)} ${f(-h * 0.02)} M${f(w * 0.4)} ${f(h * 0.44)} q${f(w * 0.08)} ${f(-h * 0.06)} ${f(w * 0.14)} ${f(-h * 0.04)}`, { w: 1.4, color: P.ink, opacity: 0.55 });
+  else out += c.ink(`M${f(w * 0.36)} ${f(h * 0.7)} q${f(w * 0.06)} ${f(h * 0.1)} ${f(w * 0.12)} ${f(h * 0.2)} M${f(w * 0.44)} ${f(h * 0.68)} q${f(w * 0.06)} ${f(h * 0.1)} ${f(w * 0.12)} ${f(h * 0.2)}`, { w: 1.4, color: P.ink, opacity: 0.55 });
   out += c.ink(`M${f(w * 0.42)} ${f(h * 0.82)} l-2 8 M${f(w * 0.52)} ${f(h * 0.82)} l2 8`, { w: 2.2 });
   return out;
 }

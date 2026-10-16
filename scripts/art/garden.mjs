@@ -132,12 +132,26 @@ export const assets = [
   {
     key: 'bee', dir: 'characters', w: 60, h: 52,
     draw: (c) => {
-      let s = c.paint(c.blob(22, 14, 11, 10, { rot: -0.4 }), '#EAF6FC', { sw: 2, texture: false, strokeOpacity: 0.6 });
-      s += c.paint(c.blob(38, 12, 11, 10, { rot: 0.4 }), '#EAF6FC', { sw: 2, texture: false, strokeOpacity: 0.6 });
-      const body = c.blob(30, 32, 22, 15);
-      s += c.paint(body, P.sun, { shade: P.sunDeep, inner: `<rect x="20" y="10" width="7" height="40" fill="${P.ink}" opacity=".85"/><rect x="33" y="10" width="7" height="40" fill="${P.ink}" opacity=".85"/>` });
-      s += `<ellipse cx="44" cy="29" rx="2.6" ry="3.2" fill="${P.ink}"/><ellipse cx="45" cy="36" rx="3.4" ry="2.2" fill="${P.coral}" opacity=".5"/>`;
+      let s = '';
+      // wings: translucent with veins
+      for (const [x, y, rot] of [[22, 13, -0.4], [38, 11, 0.4]]) {
+        s += c.paint(c.blob(x, y, 11, 10, { rot }), '#EAF6FC', { sw: 2, texture: false, strokeOpacity: 0.65 });
+        s += c.ink(`M${x - 6} ${y + 2} q6 -4 11 -6 M${x - 4} ${y + 5} q4 -1 8 -4`, { w: 1, color: '#7FB4CC', opacity: 0.7 });
+      }
+      // fuzzy body with shaded stripes and a stinger
       s += c.ink('M8 32 l-5 1', { w: 2.4 });
+      s += c.ink('M54 30 l4 3 l-4 2', { w: 2, color: P.ink, opacity: 0.85 });
+      const body = c.blob(30, 32, 22, 15);
+      s += c.paint(body, P.sun, { shade: P.sunDeep, inner: `<rect x="19" y="10" width="7" height="44" fill="${P.ink}" opacity=".85"/><rect x="32" y="10" width="7" height="44" fill="${P.ink}" opacity=".85"/><rect x="14" y="10" width="2.5" height="44" fill="${P.ink}" opacity=".35"/>` });
+      s += c.flat(c.blob(26, 24, 8, 4, { rot: -0.2 }), '#FFF3C8', 0.7);
+      // little antennae with dots
+      s += c.ink('M42 22 q4 -8 8 -9 M46 20 q3 -6 7 -4', { w: 1.6, color: P.ink, opacity: 0.9 });
+      s += `<circle cx="50" cy="13" r="1.8" fill="${P.ink}"/><circle cx="53" cy="16" r="1.6" fill="${P.ink}"/>`;
+      // face: eye with glint and a rosy cheek
+      s += `<ellipse cx="44" cy="29" rx="2.8" ry="3.4" fill="${P.ink}"/><circle cx="44.9" cy="27.8" r="1" fill="#fff"/>`;
+      s += `<ellipse cx="45" cy="36" rx="3.4" ry="2.2" fill="${P.coral}" opacity=".5"/>`;
+      // legs
+      s += c.ink('M22 46 l-2 5 M30 47 l0 5 M38 46 l2 5', { w: 1.6, color: P.ink, opacity: 0.8 });
       return s;
     },
   },
