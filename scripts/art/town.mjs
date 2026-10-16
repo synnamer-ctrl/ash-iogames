@@ -178,42 +178,60 @@ function vehicleWheel(c, s, { spokes = false } = {}) {
 
 function car(c, w, h, color) {
   let out = '';
-  out += c.paint(c.poly([[46, 46], [62, 10], [128, 10], [146, 46]], { r: 12, j: 0.6 }), color, {});
-  out += c.paint(c.poly([[58, 44], [70, 18], [94, 18], [94, 44]], { r: 6, j: 0.4 }), GLASS, { sw: 2.4, shade: '#A9DCEB', hlOpacity: 0.5 });
-  out += c.paint(c.poly([[102, 44], [102, 18], [122, 18], [136, 44]], { r: 6, j: 0.4 }), GLASS, { sw: 2.4, shade: '#A9DCEB', hlOpacity: 0.5 });
+  // wheel arches sit behind the body
+  for (const x of [48, w - 48]) out += c.flat(c.blob(x, 80, 28, 19), '#7A3F38', 0.45);
+  // body: roof + bonnet + boot, one silhouette
+  out += c.paint(c.poly([[44, 48], [60, 12], [130, 12], [148, 48]], { r: 13, j: 0.6 }), color, {});
+  out += c.paint(c.rect(6, 40, w - 12, 44, 18), color, { shade: darken(color, 0.22) });
+  // glass: two window panes with frames and reflections
+  out += c.paint(c.poly([[57, 44], [68, 19], [94, 19], [94, 44]], { r: 6, j: 0.4 }), GLASS, { sw: 2.6, shade: '#7CC6E6', hlOpacity: 0.6 });
+  out += c.paint(c.poly([[102, 44], [102, 19], [124, 19], [138, 44]], { r: 6, j: 0.4 }), GLASS, { sw: 2.6, shade: '#7CC6E6', hlOpacity: 0.6 });
+  out += c.ink('M70 26 L82 26 M108 26 L120 26', { w: 2.4, color: '#FFFFFF', opacity: 0.9 });
   // driver
   out += c.paint(c.blob(114, 34, 10, 10), P.skin2, { sw: 2, texture: false });
   out += c.flat(c.blob(114, 26, 10, 5), P.woodDark);
   out += `<circle cx="117" cy="33" r="1.8" fill="${P.ink}"/>`;
-  out += c.paint(c.rect(6, 42, w - 12, 42, 18), color, {});
-  out += c.flat(c.rect(14, 60, w - 28, 6, 3, 0.3), lighten(color, 0.35), 0.8);
-  out += c.paint(c.blob(w - 14, 54, 7, 6), P.sun, { sw: 2, texture: false });
-  out += c.paint(c.blob(12, 56, 5, 6), P.coralDeep, { sw: 2, texture: false });
-  out += c.ink(`M96 48 v30 M84 56 h8`, { w: 2, opacity: 0.6 });
-  for (const x of [48, w - 48]) out += c.flat(c.blob(x, 84, 26, 18), '#3A434B', 0.9);
+  // door line, side stripe, roof shine
+  out += c.ink('M96 48 v30', { w: 2.2, opacity: 0.6 });
+  out += c.flat(c.rect(14, 62, w - 28, 6, 3, 0.3), lighten(color, 0.4), 0.85);
+  out += c.ink('M60 16 Q92 8 126 14', { w: 3, color: '#FFFFFF', opacity: 0.8 });
+  // bumper, grille, lamps
+  out += c.paint(c.rect(10, 74, w - 20, 10, 5, 0.3), P.inkSoft, { sw: 2, texture: false, highlight: false });
+  out += c.paint(c.blob(w - 15, 54, 8, 7), '#FFE49A', { sw: 2.2, texture: false });
+  out += c.paint(c.blob(12, 56, 5.5, 6.5), P.coralDeep, { sw: 2, texture: false });
+  for (const x of [48, w - 48]) out += c.flat(c.blob(x, 80, 24, 16), '#3A434B', 0.95);
   return out;
 }
 
 function bus(c, w, h) {
   let out = '';
+  // wheel arches
+  for (const x of [76, w - 76]) out += c.flat(c.blob(x, 120, 36, 24), '#7A5A18', 0.45);
   out += c.paint(c.rect(6, 10, w - 14, 112, 20), P.sun, { shade: P.sunDeep });
-  out += c.flat(c.rect(10, 80, w - 22, 12, 4, 0.4), P.coral, 0.9);
+  // roof rim and destination board
+  out += c.flat(c.rect(12, 14, w - 26, 8, 4, 0.2), lighten(P.sun, 0.45), 0.9);
+  out += c.paint(c.rect(w / 2 - 36, 16, 72, 8, 3), P.ink, { sw: 1.6, texture: false, highlight: false, strokeOpacity: 0.6 });
+  // coral stripe with a lighter top edge
+  out += c.flat(c.rect(10, 80, w - 22, 12, 4, 0.4), P.coral, 0.95);
+  out += c.flat(c.rect(12, 80, w - 26, 3, 2), lighten(P.coral, 0.4), 0.8);
   const kids = [[P.skin1, P.woodDark], [P.skin3, P.ink], [P.skin2, P.sunDeep], [P.skin1, P.coralDeep]];
   for (let i = 0; i < 4; i++) {
     const x = 22 + i * 54;
-    out += c.paint(c.rect(x, 24, 44, 42, 8, 0.4), GLASS, { sw: 2.4, shade: '#A9DCEB', hlOpacity: 0.5 });
+    out += c.paint(c.rect(x, 24, 44, 42, 8, 0.4), GLASS, { sw: 2.6, shade: '#7CC6E6', hlOpacity: 0.6 });
+    out += c.ink(`M${x + 14} 26 L${x + 14} 64 M${x + 30} 26 L${x + 30} 64`, { w: 1.6, color: P.inkSoft, opacity: 0.35 });
     const [sk, hair] = kids[i];
     out += c.paint(c.blob(x + 22, 52, 11, 11), sk, { sw: 1.8, texture: false });
     out += c.flat(c.blob(x + 22, 43, 11, 6, { j: 0.12 }), hair);
     out += `<circle cx="${x + 18}" cy="${52}" r="1.7" fill="${P.ink}"/><circle cx="${x + 26}" cy="${52}" r="1.7" fill="${P.ink}"/>`;
   }
-  out += c.paint(c.poly([[w - 70, 24], [w - 24, 24], [w - 12, 66], [w - 70, 66]], { r: 8, j: 0.4 }), GLASS, { sw: 2.4, shade: '#A9DCEB', hlOpacity: 0.5 });
-  out += c.paint(c.blob(w - 14, 104, 8, 7), P.white, { sw: 2, texture: false });
+  // windscreen and door
+  out += c.paint(c.poly([[w - 70, 24], [w - 24, 24], [w - 12, 66], [w - 70, 66]], { r: 8, j: 0.4 }), GLASS, { sw: 2.6, shade: '#7CC6E6', hlOpacity: 0.6 });
+  out += c.ink(`M${w - 62} 30 L${w - 40} 30`, { w: 2, color: '#FFFFFF', opacity: 0.9 });
+  out += c.paint(c.blob(w - 14, 104, 8, 7), '#FFE49A', { sw: 2.2, texture: false });
   out += c.paint(c.rect(4, 108, w - 10, 14, 6, 0.4), P.inkSoft, { sw: 2.2, texture: false });
-  for (const x of [76, w - 76]) out += c.flat(c.blob(x, 122, 32, 20), '#3A434B', 0.9);
+  for (const x of [76, w - 76]) out += c.flat(c.blob(x, 122, 32, 20), '#3A434B', 0.95);
   return out;
 }
-
 function iceCreamVan(c, w, h) {
   let out = '';
   // cone on the roof
