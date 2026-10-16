@@ -75,12 +75,24 @@ function packet(c, w, h, species) {
 function butterfly(c, w, h, wing, spot) {
   let out = '';
   for (const s of [-1, 1]) {
-    out += c.paint(c.blob(w / 2 + s * 17, h * 0.36, 15, 16, { n: 10, j: 0.05 }), wing, { sw: 2.4 });
+    const cx = w / 2 + s * 17;
+    // upper wing: a scalloped outline, lighter toward the tip
+    out += c.paint(c.blob(cx, h * 0.36, 15, 16, { n: 10, j: 0.05 }), wing, { sw: 2.4, shade: darken(wing, 0.12) });
+    out += c.flat(c.blob(cx + s * 4, h * 0.26, 7, 5, { n: 7 }), '#FFFFFF', 0.55);
+    // lower wing with a little scallop
     out += c.paint(c.blob(w / 2 + s * 14, h * 0.7, 11, 11, { n: 9, j: 0.05 }), darken(wing, 0.08), { sw: 2.2, texture: false });
-    out += `<circle cx="${f(w / 2 + s * 18)}" cy="${f(h * 0.34)}" r="4.5" fill="${spot}" opacity=".9"/>`;
+    // veins and eyespot with a ring
+    out += c.ink(`M${f(w / 2 + s * 4)} ${f(h * 0.4)} Q${f(cx)} ${f(h * 0.42)} ${f(cx + s * 9)} ${f(h * 0.2)} M${f(w / 2 + s * 4)} ${f(h * 0.4)} Q${f(cx + s * 2)} ${f(h * 0.52)} ${f(cx + s * 6)} ${f(h * 0.6)}`, { w: 1.2, color: darken(wing, 0.35), opacity: 0.55 });
+    out += `<circle cx="${f(w / 2 + s * 18)}" cy="${f(h * 0.34)}" r="4.8" fill="${spot}" opacity=".95" stroke="${P.ink}" stroke-width="1.2"/><circle cx="${f(w / 2 + s * 18)}" cy="${f(h * 0.34)}" r="1.8" fill="#FFFFFF" opacity=".85"/>`;
+    // dots along the outer wing edge
+    out += `<circle cx="${f(w / 2 + s * 24)}" cy="${f(h * 0.22)}" r="1.4" fill="#FFFFFF" opacity=".8"/><circle cx="${f(w / 2 + s * 22)}" cy="${f(h * 0.48)}" r="1.3" fill="#FFFFFF" opacity=".8"/>`;
   }
+  // body: a segmented abdomen with a highlight
   out += c.paint(c.rect(w / 2 - 4, h * 0.2, 8, h * 0.66, 4, 0.2), P.ink, { sw: 1.4, texture: false, highlight: false });
+  out += c.flat(c.rect(w / 2 - 2, h * 0.3, 2, h * 0.4, 1), '#FFFFFF', 0.25);
+  // curled antennae with little clubs
   out += c.ink(`M${w / 2 - 2} ${h * 0.2} q-4 -8 -9 -10 M${w / 2 + 2} ${h * 0.2} q4 -8 9 -10`, { w: 1.8 });
+  out += `<circle cx="${f(w / 2 - 11)}" cy="${f(h * 0.2 - 10)}" r="1.8" fill="${P.ink}"/><circle cx="${f(w / 2 + 11)}" cy="${f(h * 0.2 - 10)}" r="1.8" fill="${P.ink}"/>`;
   return out;
 }
 
@@ -171,14 +183,29 @@ export const assets = [
   {
     key: 'frog', dir: 'characters', w: 80, h: 62,
     draw: (c) => {
-      let s = c.paint(c.blob(40, 40, 32, 20), '#8FCB7E', { shade: '#6FAE62' });
+      const green = '#8FCB7E', deep = '#6FAE62';
+      let s = '';
+      // folded back legs with joints, behind the body
+      s += c.paint(c.blob(16, 54, 11, 5, { rot: -0.3 }), green, { sw: 2.2, texture: false, shade: deep });
+      s += c.paint(c.blob(64, 54, 11, 5, { rot: 0.3 }), green, { sw: 2.2, texture: false, shade: deep });
+      s += c.ink('M18 52 l6 -4 M62 52 l-6 -4', { w: 1.2, color: deep, opacity: 0.6 });
+      // body with a pale belly and spots on the back
+      s += c.paint(c.blob(40, 40, 32, 20), green, { shade: deep });
+      s += c.flat(c.blob(40, 46, 22, 8), '#E8F6D8', 0.8);
+      for (const [x, y, r] of [[30, 36, 2.2], [44, 32, 2], [54, 40, 2.4], [36, 44, 1.6]]) s += c.flat(c.blob(x, y, r, r), deep, 0.8);
+      // bulging eyes with glints
       for (const x of [26, 54]) {
-        s += c.paint(c.blob(x, 18, 11, 11), '#8FCB7E', { sw: 2.4, texture: false, shade: '#6FAE62' });
-        s += `<circle cx="${x}" cy="18" r="5.6" fill="${P.white}" stroke="${P.ink}" stroke-width="1.8"/><circle cx="${x + 1}" cy="18" r="3" fill="${P.ink}"/>`;
+        s += c.paint(c.blob(x, 18, 11, 11), green, { sw: 2.4, texture: false, shade: deep });
+        s += `<circle cx="${x}" cy="18" r="5.8" fill="${P.white}" stroke="${P.ink}" stroke-width="1.8"/><circle cx="${x + 1}" cy="18.5" r="3.1" fill="${P.ink}"/><circle cx="${x + 2.2}" cy="16.8" r="1" fill="#fff"/>`;
       }
-      s += c.ink('M28 42 q12 9 24 0', { w: 2.4 });
+      // smile and rosy cheeks
+      s += c.ink('M26 42 q14 10 28 0', { w: 2.4 });
       s += `<ellipse cx="20" cy="38" rx="5" ry="3" fill="${P.coral}" opacity=".45"/><ellipse cx="60" cy="38" rx="5" ry="3" fill="${P.coral}" opacity=".45"/>`;
-      s += c.paint(c.blob(16, 56, 12, 5), '#8FCB7E', { sw: 2.2, texture: false }) + c.paint(c.blob(64, 56, 12, 5), '#8FCB7E', { sw: 2.2, texture: false });
+      // front feet with toes
+      for (const x of [16, 64]) {
+        s += c.paint(c.blob(x, 56, 12, 5), green, { sw: 2.2, texture: false });
+        s += c.ink(`M${x - 6} 58 l1 -2 M${x} 59 l0 -2 M${x + 6} 58 l-1 -2`, { w: 1, color: deep, opacity: 0.7 });
+      }
       return s;
     },
   },
