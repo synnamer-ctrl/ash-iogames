@@ -227,6 +227,9 @@ export class Ctx {
     const sx = o.shadeOff?.[0] ?? Math.min(7, Math.max(2.5, bbox.w * 0.05));
     const sy = o.shadeOff?.[1] ?? Math.min(9, Math.max(3, bbox.h * 0.06));
     const tex = o.texture === false ? '' : this.pencil(bbox, { color: o.pencilColor ?? '#ffffff', opacity: o.pencilOpacity ?? 0.2, density: o.density ?? 1 });
+    // watercolour pooled edge: pigment gathers just inside the outline
+    const poolW = Math.max(3, Math.min(10, Math.min(bbox.w, bbox.h) * 0.07));
+    const pool = o.pool === false ? '' : `<path d="${d}" fill="none" stroke="${darken(fill, 0.22)}" stroke-width="${f(poolW)}" opacity="0.32" transform="translate(${f(-sx)} ${f(-sy)})"/>`;
     const dark = o.texture === false ? '' : this.pencil(
       { x: bbox.x + bbox.w * 0.45, y: bbox.y + bbox.h * 0.5, w: bbox.w * 0.55, h: bbox.h * 0.5 },
       { color: P.ink, opacity: 0.05, density: 0.6 },
@@ -237,7 +240,7 @@ export class Ctx {
       (o.sketch === false ? '' : `<path d="${d}" fill="none" stroke="${o.strokeColor ?? P.ink}" stroke-width="${f(sw * 0.4)}" stroke-linejoin="round" opacity="0.28" transform="translate(${f(this.jit(1.2))} ${f(this.jit(1.2))})"/>`);
     return `<clipPath id="${id}"><path d="${d}"/></clipPath>` +
       `<path d="${d}" fill="${shade}"/>` +
-      `<g clip-path="url(#${id})"><path d="${d}" fill="${fill}" transform="translate(${f(-sx)} ${f(-sy)})"/>${tex}${dark}${hl}${o.inner ?? ''}</g>` +
+      `<g clip-path="url(#${id})"><path d="${d}" fill="${fill}" transform="translate(${f(-sx)} ${f(-sy)})"/>${pool}${tex}${dark}${hl}${o.inner ?? ''}</g>` +
       stroke;
   }
 
