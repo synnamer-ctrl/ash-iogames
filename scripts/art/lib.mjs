@@ -303,6 +303,40 @@ export class Ctx {
     return this.poly(v, { r: ro * 0.12, j: 0.4, step: 40 });
   }
 
+  /**
+   * Hand-drawn doodle marks: a wobbly double-stroke ink line in a crayon colour.
+   * `kind` picks the mark; all of them are drawn with the same sketchy line so
+   * they feel like one doodler's hand.
+   */
+  doodle(kind, x, y, s = 1, { color = P.inkSoft, w = 3, opacity = 0.55, rot = 0 } = {}) {
+    let d;
+    switch (kind) {
+      case 'squiggle':
+        d = `M${f(-30 * s)} 0 q${f(10 * s)} ${f(-14 * s)} ${f(20 * s)} 0 t${f(20 * s)} 0 t${f(20 * s)} 0`;
+        break;
+      case 'spiral': {
+        const pts = [];
+        for (let i = 0; i <= 40; i++) {
+          const a = i * 0.45, r = 1.2 * s * a;
+          pts.push([Math.cos(a) * r, Math.sin(a) * r]);
+        }
+        d = smoothPath(pts, false);
+        break;
+      }
+      case 'arrow':
+        d = `M${f(-26 * s)} 0 q${f(26 * s)} ${f(-6 * s)} ${f(44 * s)} ${f(-4 * s)} M${f(26 * s)} ${f(-4 * s)} l${f(-10 * s)} ${f(-8 * s)} M${f(26 * s)} ${f(-4 * s)} l${f(-9 * s)} ${f(7 * s)}`;
+        break;
+      case 'loop':
+        d = `M${f(-22 * s)} 0 c0 ${f(-22 * s)} ${f(44 * s)} ${f(-22 * s)} ${f(44 * s)} 0 c0 ${f(22 * s)} ${f(-44 * s)} ${f(22 * s)} ${f(-44 * s)} ${f(-6 * s)}`;
+        break;
+      default:
+        d = '';
+    }
+    const g = `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(rot)})">`;
+    // two overlapping passes, the second slightly offset, gives the sketchy line
+    return g + this.ink(d, { w, color, opacity }) + `<g transform="translate(${f(this.jit(1.2))} ${f(this.jit(1.2))})">${this.ink(d, { w: w * 0.45, color, opacity: opacity * 0.6 })}</g></g>`;
+  }
+
   heart(cx, cy, s) {
     const pts = [];
     for (let i = 0; i < 28; i++) {

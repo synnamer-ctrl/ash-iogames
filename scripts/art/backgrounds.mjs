@@ -42,8 +42,9 @@ function texture(c, x, y, w, h, color, opacity, density = 0.25, angle = -30) {
 function grassTufts(c, x0, x1, y0, y1, n, color = P.leafDeep) {
   let s = '';
   for (let i = 0; i < n; i++) {
-    const x = c.rand(x0, x1), y = c.rand(y0, y1);
-    s += c.ink(`M${f(x - 6)} ${f(y)} q2 -9 4 -12 M${f(x)} ${f(y)} q0 -10 2 -15 M${f(x + 6)} ${f(y)} q-1 -8 -3 -11`, { w: 2, color, opacity: 0.55 });
+    const x = c.rand(x0, x1), y = c.rand(y0, y1), k = 0.8 + c.rand(0, 0.5);
+    // three wobbly blades, the middle one tallest
+    s += c.ink(`M${f(x - 6 * k)} ${f(y)} q${f(2 * k)} ${f(-9 * k)} ${f(4 * k)} ${f(-12 * k)} M${f(x)} ${f(y)} q${f(0.5 * k)} ${f(-10 * k)} ${f(2 * k)} ${f(-16 * k)} M${f(x + 6 * k)} ${f(y)} q${f(-1 * k)} ${f(-8 * k)} ${f(-3 * k)} ${f(-11 * k)}`, { w: 2.2, color, opacity: 0.55 });
   }
   return s;
 }
@@ -199,6 +200,7 @@ function workshopScene(c) {
   s += c.ink('M60 900 q20 -30 40 0 t40 0 t40 0', { w: 3, color: P.coralDeep, opacity: 0.5 });
   s += c.ink(c.star(1500, 920, 26, 12).d, { w: 3, color: P.lavDeep, opacity: 0.5 });
   s += c.ink(c.heart(90, 80, 22).d, { w: 3, color: P.coralDeep, opacity: 0.45 });
+  s += c.doodle('arrow', 1290, 40, 1.2, { color: P.inkSoft, w: 3, opacity: 0.45, rot: -10 });
   // desk clutter kept outside the paper: a ruler, shavings, paper scraps and crayon marks
   s += c.paint(c.rect(-60, 330, 330, 48, 8), '#F4E9C8', { shade: '#DCCD9E', sw: 2.6, texture: false, highlight: false });
   for (let x = -40; x < 260; x += 30) s += c.ink(`M${x} 330 v${x % 60 ? 14 : 22}`, { w: 2.4, color: P.inkSoft, opacity: 0.6 });
@@ -206,8 +208,9 @@ function workshopScene(c) {
     s += c.paint(c.rect(x - 36, y - 26, 72, 50, 4, 0.6), col, { sw: 2.6, texture: false, highlight: false });
   }
   for (const [x, y] of [[1500, 470], [1540, 548]]) s += c.paint(c.poly([[x - 40, y], [x, y - 14], [x + 40, y], [x, y + 14]], { r: 4 }), P.wood, { sw: 2.6, texture: false, highlight: false });
-  s += c.ink('M1180 760 q30 -10 60 4 t60 -2 t50 6', { w: 5, color: P.lavDeep, opacity: 0.45 });
-  s += c.ink('M-30 720 q40 14 80 -6 t80 4', { w: 4, color: P.leafDeep, opacity: 0.4 });
+  s += c.doodle('squiggle', 1230, 770, 1.4, { color: P.lavDeep, w: 4, opacity: 0.5 });
+  s += c.doodle('spiral', 1480, 780, 1.1, { color: P.coralDeep, w: 3, opacity: 0.45 });
+  s += c.doodle('squiggle', 90, 735, 1.2, { color: P.leafDeep, w: 4, opacity: 0.45 });
   return s;
 }
 
