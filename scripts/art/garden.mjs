@@ -315,46 +315,51 @@ export const assets = [
   {
     key: 'hedgehog', dir: 'characters', w: 110, h: 74,
     draw: (c) => {
-      // real hedgehog anatomy, cartoon rendering: spiny brown back, pale face and belly, dark mask, pointed snout
-      const coat = '#8C6A52', coatDeep = '#5E4333', band = '#EAD7B8', belly = '#F3E3C8', mask = '#4A3328', nose = '#2A1F1A';
-      let s = c.groundShadow(54, 68, 42, 5);
-      // short legs with claws, behind the body
-      for (const x of [34, 48, 72, 86]) {
-        s += c.paint(c.rect(x - 5, 54, 10, 14, 5, 0.2), belly, { sw: 2.2, texture: false, shade: '#D9C3A0' });
-        s += c.ink(`M${x - 3} 67 l-1 3 M${x} 67 v3 M${x + 3} 67 l1 3`, { w: 1.2, color: '#8F7458', opacity: 0.9 });
+      // reference look: layered spikes with cream tips, textured brown body, cream face with a dark eye mask
+      const brown = '#7A5238', brownDeep = '#4E3322', brownLight = '#9A6E4F', spike = '#4A2F20', spikeTip = '#F3E2C6', cream = '#FBF1E0', creamShade = '#E2CDAE', pink = '#F2A0A0', ink = '#2B1B12';
+      let s = c.groundShadow(54, 70, 44, 5);
+      // back legs
+      for (const x of [30, 78]) {
+        s += c.paint(c.rect(x - 7, 52, 14, 16, 6, 0.2), cream, { sw: 2.2, texture: false, shade: creamShade });
+        s += c.paint(c.blob(x, 68, 9, 4.5), cream, { sw: 1.8, texture: false, highlight: false });
+        for (const dx of [-4, 0, 4]) s += `<ellipse cx="${x + dx}" cy="70" rx="1.7" ry="2.2" fill="${ink}"/>`;
       }
-      // body: a low spiny dome
-      s += c.paint(c.blob(56, 42, 38, 24, { n: 14, j: 0.025 }), coat, { shade: coatDeep });
-      // spines: rows of short cartoon quills, each with a pale band near the tip
-      for (let row = 0; row < 3; row++) {
-        const rx = 36 - row * 5, ry = 22 - row * 3.5;
-        const count = 12 - row;
+      // body: rounded brown with a textured fur shade
+      s += c.paint(c.blob(52, 42, 39, 24, { n: 14, j: 0.02 }), brown, { shade: brownDeep, sw: 2.6 });
+      s += c.flat(c.blob(44, 34, 22, 6, { n: 10 }), brownLight, 0.6);
+      for (let i = 0; i < 6; i++) s += c.ink(`M${f(30 + i * 9)} ${f(48 + (i % 2) * 4)} q4 -4 8 0`, { w: 1.2, color: brownDeep, opacity: 0.45 });
+      // layered spikes: three rows of cones, back row first, each with a cream tip
+      const rows = [[36, 22, 13, spike], [31, 18, 11, '#5A3A28'], [25, 14, 9, spike]];
+      rows.forEach(([rx, ry, len, col], row) => {
+        const count = 10 - row;
         for (let i = 0; i < count; i++) {
-          const a = Math.PI * 1.06 + ((i + row * 0.5) / count) * Math.PI * 0.78;
-          const bx = 56 + Math.cos(a) * rx, by = 42 + Math.sin(a) * ry;
-          const len = 10 - row * 1.5;
-          const tx = bx + Math.cos(a - 0.2) * len, ty = by + Math.sin(a - 0.2) * len;
-          const nx = -Math.sin(a) * 3.2, ny = Math.cos(a) * 3.2;
-          s += c.paint(c.poly([[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]], { r: 1.2 }), coatDeep, { sw: 1.6, texture: false, highlight: false });
-          s += c.ink(`M${f(bx + (tx - bx) * 0.5)} ${f(by + (ty - by) * 0.5)} l${f(Math.cos(a - 0.2) * 1.5)} ${f(Math.sin(a - 0.2) * 1.5)}`, { w: 2, color: band, opacity: 0.95 });
+          const a = Math.PI * 1.04 + ((i + 0.3 * row) / count) * Math.PI * 0.8;
+          const bx = 54 + Math.cos(a) * rx, by = 42 + Math.sin(a) * ry;
+          const ln = len + (i % 2 ? 2 : 0);
+          const tx = bx + Math.cos(a - 0.12) * ln, ty = by + Math.sin(a - 0.12) * ln;
+          const nx = -Math.sin(a) * 4.2, ny = Math.cos(a) * 4.2;
+          s += c.paint(c.poly([[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]], { r: 1.6 }), col, { sw: 1.8, texture: false, highlight: false });
+          s += c.flat(c.poly([[tx, ty], [bx + (tx - bx) * 0.45 + nx * 0.4, by + (ty - by) * 0.45 + ny * 0.4], [bx + (tx - bx) * 0.45 - nx * 0.4, by + (ty - by) * 0.45 - ny * 0.4]], { r: 1 }), spikeTip, 0.95);
         }
+      });
+      // cream face: a large rounded patch on the front, with a soft shade
+      s += c.paint(c.blob(88, 44, 18, 16, { n: 12, j: 0.025 }), cream, { shade: creamShade, sw: 2.4 });
+      // dark eye mask
+      s += c.flat(c.blob(90, 36, 9, 7, { n: 10, j: 0.03 }), brownDeep, 0.95);
+      // round ear with a pink inside
+      s += c.paint(c.blob(80, 29, 6.5, 6.5, { n: 10 }), brownDeep, { sw: 2, texture: false, highlight: false });
+      s += c.flat(c.blob(80, 29, 3.8, 3.8, { n: 8 }), pink, 0.95);
+      // big glossy eye
+      s += `<ellipse cx="94" cy="38" rx="3.8" ry="4.6" fill="${ink}"/><circle cx="95.2" cy="36.4" r="1.4" fill="#fff"/><circle cx="93" cy="40" r="0.6" fill="#fff" opacity=".7"/>`;
+      // smile, blush and round nose
+      s += c.ink('M96 50 q4 3 7 -1', { w: 1.6, color: ink, opacity: 0.85 });
+      s += `<ellipse cx="89" cy="48" rx="3.6" ry="2.4" fill="${pink}" opacity=".6"/>`;
+      s += `<circle cx="106" cy="46" r="3.6" fill="${ink}"/><circle cx="104.8" cy="44.6" r="1.1" fill="#fff"/>`;
+      // front feet: cream with dark claws
+      for (const x of [56, 96]) {
+        s += c.paint(c.blob(x, 66, 9, 6), cream, { sw: 2, texture: false, shade: creamShade });
+        for (const dx of [-4, 0, 4]) s += `<ellipse cx="${x + dx}" cy="71" rx="1.8" ry="2.4" fill="${ink}"/>`;
       }
-      // pale face and belly
-      s += c.paint(c.blob(84, 46, 15, 13, { n: 12, j: 0.03 }), belly, { shade: '#DCC6A4' });
-      s += c.paint(c.blob(70, 58, 14, 7, { n: 10, j: 0.03 }), belly, { sw: 1.8, texture: false, highlight: false });
-      // dark mask over the eyes
-      s += c.flat(c.blob(90, 40, 8, 6, { n: 9, j: 0.03 }), mask, 0.9);
-      // small rounded ear
-      s += c.paint(c.blob(80, 28, 5, 4.5, { n: 8 }), '#6B4B38', { sw: 2, texture: false, highlight: false });
-      s += c.ink('M79 28 q1 -2 2 0', { w: 1, color: '#B98B70', opacity: 0.8 });
-      // pointed snout ending in a dark nose
-      s += c.paint(c.poly([[92, 40], [106, 47], [98, 52], [90, 50]], { r: 3 }), belly, { sw: 2.2, texture: false, highlight: false });
-      s += `<ellipse cx="106" cy="47" rx="2.4" ry="2" fill="${nose}"/><circle cx="105.2" cy="46.4" r="0.7" fill="#fff" opacity=".7"/>`;
-      // cartoon eye with glint and a blush
-      s += `<ellipse cx="91" cy="39" rx="3.1" ry="3.6" fill="${P.ink}"/><circle cx="92" cy="37.8" r="1.1" fill="#fff"/>`;
-      s += `<ellipse cx="88" cy="46" rx="3.2" ry="2.1" fill="#F4A7A0" opacity=".55"/>`;
-      // tiny whisker bristles
-      s += c.ink('M99 49 l5 -1 M99 51 l5 1', { w: 1, color: coatDeep, opacity: 0.6 });
       return s;
     },
   },
