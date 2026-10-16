@@ -1,32 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
   <title>Home button</title>
   <defs>
-    <radialGradient id="coin" cx="0.38" cy="0.32" r="0.8">
-      <stop offset="0" stop-color="#FFEBA3"/>
-      <stop offset="0.6" stop-color="#FFD66B"/>
-      <stop offset="1" stop-color="#E9B24A"/>
+    <radialGradient id="coin" cx="0.36" cy="0.3" r="0.85">
+      <stop offset="0" stop-color="#FFF3B8"/>
+      <stop offset="0.55" stop-color="#FFD66B"/>
+      <stop offset="1" stop-color="#E7AE44"/>
     </radialGradient>
     <linearGradient id="roofG" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#D7CBFF"/>
+      <stop offset="0" stop-color="#DDD3FF"/>
       <stop offset="1" stop-color="#A391DD"/>
     </linearGradient>
+    <linearGradient id="wallG" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EEE7FF"/>
+    </linearGradient>
     <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
-      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
-      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
-      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
+    <filter id="blur1"><feGaussianBlur stdDeviation="1.2"/></filter>
   </defs>
   <g filter="url(#wc)">
-    <circle cx="64" cy="66" r="56" fill="#E9B24A" opacity="0.35"/>
-    <circle cx="64" cy="62" r="54" fill="url(#coin)" stroke="#B9842A" stroke-width="4"/>
-    <path d="M22 50 C28 30 46 18 66 18" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.75"/>
+    <circle cx="64" cy="68" r="57" fill="#B9842A" opacity="0.4"/>
+    <circle cx="64" cy="62" r="54" fill="url(#coin)" stroke="#B0802A" stroke-width="4"/>
+    <path d="M24 52 C30 32 46 20 66 19" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+    <path d="M24 84 C40 102 88 104 104 86" fill="none" stroke="#C88A2E" stroke-width="5" stroke-linecap="round" opacity="0.5" filter="url(#blur1)"/>
     <!-- house -->
-    <path d="M34 66 L64 40 L94 66 Z" fill="url(#roofG)" stroke="#5E4E9A" stroke-width="3.4" stroke-linejoin="round"/>
-    <path d="M42 66 L42 92 C42 96 45 98 49 98 L79 98 C83 98 86 96 86 92 L86 66 L64 48 Z" fill="#F4EEFF" stroke="#5E4E9A" stroke-width="3.4" stroke-linejoin="round"/>
-    <path d="M56 98 L56 80 C56 74 72 74 72 80 L72 98" fill="#FFD66B" stroke="#5E4E9A" stroke-width="2.6" stroke-linejoin="round"/>
-    <path d="M48 62 C54 56 62 56 64 60" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+    <path d="M32 66 L64 38 L96 66 Z" fill="url(#roofG)" stroke="#5E4E9A" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M42 66 L42 92 C42 96 45 98 49 98 L79 98 C83 98 86 96 86 92 L86 66 L64 47 Z" fill="url(#wallG)" stroke="#5E4E9A" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M55 98 L55 80 C55 73 73 73 73 80 L73 98" fill="#FFD66B" stroke="#5E4E9A" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M48 62 C54 55 62 54 66 58" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="70" cy="86" r="2" fill="#5E4E9A"/>
   </g>
 </svg>

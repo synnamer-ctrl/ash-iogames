@@ -1,60 +1,73 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 440" width="400" height="440">
   <title>Round-canopy tree</title>
   <defs>
-    <linearGradient id="leaf" x1="0" y1="0" x2="0.6" y2="1">
-      <stop offset="0" stop-color="#B7E0A0"/>
-      <stop offset="0.6" stop-color="#9BCF8A"/>
-      <stop offset="1" stop-color="#7DB673"/>
+    <linearGradient id="leaf" x1="0.1" y1="0" x2="0.7" y2="1">
+      <stop offset="0" stop-color="#C6E9AE"/>
+      <stop offset="0.55" stop-color="#9BCF8A"/>
+      <stop offset="1" stop-color="#6FA96A"/>
     </linearGradient>
     <linearGradient id="bark" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#D9A074"/>
-      <stop offset="0.6" stop-color="#B98255"/>
-      <stop offset="1" stop-color="#8E5F3E"/>
+      <stop offset="0" stop-color="#E0AE80"/>
+      <stop offset="0.55" stop-color="#B98255"/>
+      <stop offset="1" stop-color="#7E5234"/>
     </linearGradient>
+    <clipPath id="canopy">
+      <path id="canopyPath" d="M50 180 C26 154 38 112 74 112 C78 82 120 72 136 100 C152 78 194 82 200 110 C224 86 264 92 266 122 C304 116 330 152 314 182 C342 196 334 240 302 242 C298 264 258 270 242 252 C224 276 172 278 160 254 C126 264 84 256 80 230 C48 228 34 204 50 180 Z"/>
+    </clipPath>
     <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
-      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="11" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="5" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.3  0 0 0 0 0.26  0 0 0 0 0.2  0 0 0 0.16 0" result="grainA"/>
       <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
       <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
     </filter>
+    <filter id="blur1"><feGaussianBlur stdDeviation="1.4"/></filter>
     <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
   </defs>
-  <ellipse cx="200" cy="392" rx="120" ry="16" fill="#38454A" opacity="0.14" filter="url(#soft)"/>
+  <ellipse cx="200" cy="394" rx="124" ry="14" fill="#38454A" opacity="0.14" filter="url(#soft)"/>
   <g filter="url(#wc)">
-    <!-- trunk with a slight fork -->
-    <path d="M180 250 C178 300 172 340 160 384 C176 392 224 392 240 384 C228 340 222 300 220 250 Z" fill="url(#bark)" stroke="#6B4530" stroke-width="3.2" stroke-linejoin="round"/>
-    <path d="M196 258 C192 300 190 340 186 372" fill="none" stroke="#7A4F34" stroke-width="2.2" stroke-linecap="round" opacity="0.7"/>
-    <path d="M214 300 C236 286 252 270 258 250" fill="none" stroke="#B98255" stroke-width="9" stroke-linecap="round"/>
-    <path d="M214 300 C236 286 252 270 258 250" fill="none" stroke="#6B4530" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
-    <!-- canopy: overlapping lobes, back first -->
-    <path d="M52 176 C30 150 40 110 74 112 C78 84 118 74 132 100 C150 80 190 84 196 110 C220 88 260 92 262 122 C300 116 326 150 312 180 C340 194 332 236 300 240 C296 262 256 268 240 250 C222 274 170 276 158 252 C124 262 84 254 80 228 C48 226 34 202 52 176 Z" fill="url(#leaf)" stroke="#4E7F4E" stroke-width="3.6" stroke-linejoin="round"/>
-    <!-- inner shade lobes -->
-    <path d="M90 230 C120 246 160 246 200 236 C230 228 270 236 296 226" fill="none" stroke="#6FA96A" stroke-width="12" stroke-linecap="round" opacity="0.55"/>
-    <path d="M110 150 C126 128 160 132 170 152" fill="none" stroke="#D5EFC0" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
-    <path d="M226 146 C240 130 268 134 276 150" fill="none" stroke="#D5EFC0" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
-    <!-- leaf clusters -->
-    <g fill="none" stroke="#4E7F4E" stroke-width="2.4" stroke-linecap="round" opacity="0.7">
-      <path d="M96 176 q8 -10 18 -2 q-8 2 -18 2"/>
-      <path d="M160 196 q8 -10 18 -2 q-8 2 -18 2"/>
-      <path d="M236 180 q8 -10 18 -2 q-8 2 -18 2"/>
-      <path d="M270 214 q8 -10 18 -2 q-8 2 -18 2"/>
-      <path d="M124 228 q8 -10 18 -2 q-8 2 -18 2"/>
-      <path d="M190 150 q8 -10 18 -2 q-8 2 -18 2"/>
+    <!-- trunk, with a fork and roots -->
+    <path d="M176 250 C172 300 168 344 156 386 C170 394 230 394 244 386 C232 344 226 300 224 250 Z" fill="url(#bark)" stroke="#5E3B26" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M226 318 C246 300 258 282 262 254" fill="none" stroke="#B98255" stroke-width="11" stroke-linecap="round"/>
+    <path d="M226 318 C246 300 258 282 262 254" fill="none" stroke="#5E3B26" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M186 296 C184 330 182 356 178 380" fill="none" stroke="#7E5234" stroke-width="2.2" stroke-linecap="round" opacity="0.7"/>
+    <path d="M158 386 C146 390 134 394 124 396 M244 386 C256 390 268 394 278 396" fill="none" stroke="#7E5234" stroke-width="4" stroke-linecap="round"/>
+    <!-- canopy wash, pooled edge, outline -->
+    <use href="#canopyPath" fill="url(#leaf)"/>
+    <g clip-path="url(#canopy)">
+      <path d="M40 236 C110 268 260 270 340 232" fill="none" stroke="#5E9A5C" stroke-width="18" opacity="0.5" filter="url(#blur1)"/>
+      <path d="M220 96 C250 90 300 110 330 160" fill="none" stroke="#5E9A5C" stroke-width="12" opacity="0.25" filter="url(#blur1)"/>
+      <!-- interior lobe shading -->
+      <path d="M100 228 C118 200 160 210 176 238" fill="none" stroke="#5E9A5C" stroke-width="10" opacity="0.35" stroke-linecap="round"/>
+      <path d="M232 226 C250 204 290 206 304 226" fill="none" stroke="#5E9A5C" stroke-width="10" opacity="0.35" stroke-linecap="round"/>
     </g>
-    <!-- a few blossoms and fruit -->
+    <use href="#canopyPath" fill="none" stroke="#3F6E42" stroke-width="3.6" stroke-linejoin="round"/>
+    <!-- light catches on the top-left lobes -->
+    <path d="M96 150 C100 128 124 118 140 126" fill="none" stroke="#EAF7DA" stroke-width="8" stroke-linecap="round"/>
+    <path d="M168 128 C178 112 204 110 216 122" fill="none" stroke="#EAF7DA" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+    <!-- leaf flicks -->
+    <g fill="none" stroke="#3F6E42" stroke-width="2.2" stroke-linecap="round" opacity="0.75">
+      <path d="M116 196 q9 -10 20 -2 q-9 3 -20 2"/>
+      <path d="M182 210 q9 -10 20 -2 q-9 3 -20 2"/>
+      <path d="M258 170 q9 -10 20 -2 q-9 3 -20 2"/>
+      <path d="M134 150 q9 -10 20 -2 q-9 3 -20 2"/>
+      <path d="M212 246 q9 -10 20 -2 q-9 3 -20 2"/>
+    </g>
+    <!-- blossoms and fruit with highlights -->
     <g stroke="#38454A" stroke-width="1.6">
-      <circle cx="146" cy="168" r="6" fill="#FFD66B"/>
-      <circle cx="232" cy="200" r="6" fill="#F58F83"/>
-      <circle cx="286" cy="162" r="5.5" fill="#FFFFFF"/>
-      <circle cx="108" cy="206" r="5.5" fill="#F58F83"/>
-      <circle cx="200" cy="130" r="5.5" fill="#FFD66B"/>
+      <circle cx="148" cy="172" r="6.5" fill="#FFD66B"/>
+      <circle cx="236" cy="204" r="6.5" fill="#F58F83"/>
+      <circle cx="290" cy="164" r="6" fill="#FFFFFF"/>
+      <circle cx="110" cy="214" r="6" fill="#F58F83"/>
+      <circle cx="204" cy="132" r="6" fill="#FFD66B"/>
+    </g>
+    <g fill="#FFFFFF" opacity="0.8">
+      <circle cx="146" cy="170" r="1.8"/><circle cx="234" cy="202" r="1.8"/><circle cx="108" cy="212" r="1.8"/><circle cx="202" cy="130" r="1.8"/>
     </g>
   </g>
-  <!-- grass tufts at the base -->
-  <g fill="none" stroke="#6FA96A" stroke-width="3" stroke-linecap="round">
-    <path d="M140 400 q-4 -14 -12 -20 M146 400 q0 -18 4 -24 M152 400 q6 -12 14 -16"/>
-    <path d="M248 400 q-6 -12 -14 -16 M254 400 q2 -16 -2 -24 M262 400 q6 -12 14 -16"/>
+  <g fill="none" stroke="#5E9A5C" stroke-width="3.2" stroke-linecap="round">
+    <path d="M136 400 q-4 -14 -12 -20 M142 400 q0 -18 4 -24 M150 400 q6 -12 14 -16"/>
+    <path d="M250 400 q-6 -12 -14 -16 M256 400 q2 -16 -2 -24 M264 400 q6 -12 14 -16"/>
   </g>
 </svg>
