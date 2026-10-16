@@ -36,7 +36,7 @@ function plant(c, w, h, stage, species) {
   }
   const top = stage === 'bud' ? base - h * 0.78 : base - h * 0.74;
   out += stem(c, x, base, top + 14, 8);
-  out += leafShape(c, x + 2, base - h * 0.3, 1) + leafShape(c, x, base - h * 0.42, -1, 0.9);
+  out += leafShape(c, x + 2, base - h * 0.3, 1, 1.15) + leafShape(c, x, base - h * 0.42, -1, 1.05) + leafShape(c, x + 1, base - h * 0.2, -1, 0.85);
   if (stage === 'bud') {
     const col = species === 'tulip' ? P.coral : species === 'sun' ? P.sun : P.white;
     out += c.paint(c.poly([[x - 14, top + 10], [x, top - 18], [x + 14, top + 10], [x, top + 18]], { r: 9 }), col, { sw: 2.4 });
@@ -44,14 +44,14 @@ function plant(c, w, h, stage, species) {
     return out;
   }
   if (species === 'tulip') {
-    out += c.paint(c.poly([[x - 26, top - 14], [x - 12, top], [x, top - 24], [x + 12, top], [x + 26, top - 14], [x + 22, top + 20], [x - 22, top + 20]], { r: 9, j: 0.5 }), P.coral, {});
+    out += c.paint(c.poly([[x - 32, top - 12], [x - 16, top + 2], [x, top - 26], [x + 16, top + 2], [x + 32, top - 12], [x + 26, top + 24], [x - 26, top + 24]], { r: 10, j: 0.5 }), P.coral, {});
     out += c.ink(`M${x - 10} ${top + 2} q10 16 20 0`, { w: 2, opacity: 0.5 });
   } else if (species === 'sun') {
-    out += petals(c, x, top, 14, 34, 14, 8, P.sun, P.woodDeep, 24);
+    out += petals(c, x, top, 16, 36, 15, 9.5, P.sun, P.woodDeep, 25);
     for (let i = 0; i < 8; i++) out += `<circle cx="${f(x + c.jit(14))}" cy="${f(top + c.jit(14))}" r="2" fill="${P.woodDark}"/>`;
     out += c.face(x, top - 2, 0.9, {});
   } else {
-    out += petals(c, x, top, 10, 24, 12, 7, P.white, P.sunDeep, 12);
+    out += petals(c, x, top, 12, 26, 12, 8, P.white, P.sunDeep, 13);
   }
   return out;
 }

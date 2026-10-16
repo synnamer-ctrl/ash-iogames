@@ -360,21 +360,32 @@ function tail(c, w, h, color, kind) {
 }
 
 function flower(c, w, h, petal, kind) {
-  let out = c.ink(c.line([[w / 2, h - 4], [w / 2 - 2, h * 0.45]]), { w: 4, color: P.leafDark, opacity: 1 });
-  out += c.paint(c.poly([[w / 2, h - 30], [w / 2 + 18, h - 50], [w / 2 + 4, h - 26]], { r: 5 }), P.leaf, { sw: 2, texture: false });
-  out += c.paint(c.poly([[w / 2, h - 18], [w / 2 - 18, h - 36], [w / 2 - 3, h - 14]], { r: 5 }), P.leaf, { sw: 2, texture: false });
+  let out = c.ink(c.line([[w / 2, h - 4], [w / 2 - 2, h * 0.45]]), { w: 4.2, color: P.leafDark, opacity: 1 });
+  // two broad leaves and a small third one, so the stem reads as full
+  out += c.paint(c.poly([[w / 2, h - 30], [w / 2 + 22, h - 54], [w / 2 + 6, h - 24]], { r: 7 }), P.leaf, { sw: 2.2, texture: false });
+  out += c.paint(c.poly([[w / 2, h - 16], [w / 2 - 22, h - 38], [w / 2 - 4, h - 12]], { r: 7 }), P.leaf, { sw: 2.2, texture: false });
+  out += c.paint(c.poly([[w / 2 - 2, h - 52], [w / 2 + 8, h - 66], [w / 2 + 4, h - 46]], { r: 4 }), P.leafDeep, { sw: 1.8, texture: false });
   const cy = h * 0.3;
   if (kind === 'tulip') {
-    out += c.paint(c.poly([[w / 2 - 16, cy - 10], [w / 2 - 8, cy - 2], [w / 2, cy - 16], [w / 2 + 8, cy - 2], [w / 2 + 16, cy - 10], [w / 2 + 14, cy + 12], [w / 2 - 14, cy + 12]], { r: 6, j: 0.4 }), petal, {});
+    // a fuller cup of three overlapping petals
+    out += c.paint(c.poly([[w / 2 - 22, cy - 6], [w / 2 - 12, cy + 4], [w / 2, cy - 18], [w / 2 + 12, cy + 4], [w / 2 + 22, cy - 6], [w / 2 + 18, cy + 16], [w / 2 - 18, cy + 16]], { r: 7, j: 0.5 }), petal, {});
+    out += c.paint(c.poly([[w / 2 - 12, cy + 4], [w / 2, cy - 4], [w / 2 + 12, cy + 4], [w / 2 + 8, cy + 16], [w / 2 - 8, cy + 16]], { r: 5 }), darken(petal, 0.12), { sw: 2, texture: false, highlight: false });
   } else if (kind === 'daisy') {
-    for (let i = 0; i < 8; i++) {
-      const a = (i / 8) * Math.PI * 2;
-      out += c.paint(c.blob(w / 2 + Math.cos(a) * 13, cy + Math.sin(a) * 13, 8, 5, { n: 8, rot: a }), petal, { sw: 1.8, texture: false, highlight: false });
+    // two rings of rounded petals, a warm centre and a little highlight
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * Math.PI * 2;
+      out += c.paint(c.blob(w / 2 + Math.cos(a) * 17, cy + Math.sin(a) * 17, 9.5, 6.5, { n: 8, rot: a, j: 0.06 }), petal, { sw: 1.9, texture: false, highlight: false });
     }
-    out += c.paint(c.blob(w / 2, cy, 8, 8), P.sunDeep, { sw: 2, texture: false });
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2 + 0.2;
+      out += c.paint(c.blob(w / 2 + Math.cos(a) * 9, cy + Math.sin(a) * 9, 6, 4.5, { n: 7, rot: a, j: 0.06 }), P.white, { sw: 1.6, texture: false, highlight: false });
+    }
+    out += c.paint(c.blob(w / 2, cy, 9.5, 9.5, { n: 10, j: 0.05 }), P.sunDeep, { sw: 2, texture: false });
+    out += c.flat(c.blob(w / 2 - 3, cy - 3, 3, 3), '#FFF3C8', 0.9);
   } else {
-    for (const [dx, dy] of [[-9, 4], [9, 4], [0, -8]]) out += c.paint(c.blob(w / 2 + dx, cy + dy, 10, 10, { n: 8, j: 0.08 }), petal, { sw: 2, texture: false });
-    out += c.paint(c.blob(w / 2, cy, 5, 5), P.cream, { sw: 1.6, texture: false });
+    // bell flower: five overlapping, larger bells
+    for (const [dx, dy, r] of [[-12, 6, 12], [12, 6, 12], [0, -9, 13], [-6, 10, 10], [7, 9, 10]]) out += c.paint(c.blob(w / 2 + dx, cy + dy, r, r, { n: 9, j: 0.08 }), petal, { sw: 2, texture: false });
+    out += c.paint(c.blob(w / 2, cy + 2, 5.5, 5.5), P.cream, { sw: 1.6, texture: false });
   }
   return out;
 }
