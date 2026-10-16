@@ -313,55 +313,63 @@ export const assets = [
     },
   },
   {
-    // redrawn to follow the reference: a round brown body, layered spikes with cream tips, a cream face with a dark eye mask
+    // redrawn to match the hand-drawn reference: thick brown outlines, speckled fur, cream-tipped spikes, cream muzzle, pink ear and cheek
     key: 'hedgehog', dir: 'characters', w: 110, h: 74,
     draw: (c) => {
-      const brown = '#7A5238', brownDeep = '#4E3322', brownLight = '#9A6E4F', spike = '#4A2F20', spikeBack = '#3E2619', tip = '#F3E2C6', cream = '#FBF1E0', creamShade = '#E2CDAE', pink = '#F0A0A0', ink = '#2B1B12';
-      const cx = 58, cy = 48, rx = 34, ry = 21;
-      let s = c.groundShadow(58, 71, 44, 4.5);
-      // one spike: a tapered cone from a base point, with a cream cap on its tip
-      const spikeAt = (a, len, col, capped) => {
+      const brown = '#A0683F', brownDeep = '#6A4026', ink = '#4A2C1C', cream = '#FBF1DC', creamShade = '#EBD6B0', tip = '#F5E0BC', pink = '#F4A09A', cheek = '#F29C9C';
+      const cx = 56, cy = 44, rx = 35, ry = 22;
+      let s = c.groundShadow(58, 70, 44, 4);
+      // spike: a pointed shape from the body edge, outlined; cream tip on the outer third
+      const spike = (a, len, w) => {
         const bx = cx + Math.cos(a) * rx, by = cy + Math.sin(a) * ry;
-        const d = a - 0.28;
+        const d = a - 0.22;
         const tx = bx + Math.cos(d) * len, ty = by + Math.sin(d) * len;
-        const nx = -Math.sin(d) * 4.8, ny = Math.cos(d) * 4.8;
-        let o = c.paint(c.poly([[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]], { r: 1.2 }), col, { sw: 1.6, texture: false, highlight: false });
-        if (capped) {
-          const mx = bx + (tx - bx) * 0.7, my = by + (ty - by) * 0.7;
-          o += c.flat(c.poly([[tx, ty], [mx + nx * 1.05, my + ny * 1.05], [mx - nx * 1.05, my - ny * 1.05]], { r: 0.8 }), tip, 0.95);
-        }
+        const nx = -Math.sin(d) * w, ny = Math.cos(d) * w;
+        const pts = [[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]];
+        const shape = c.poly(pts, { r: 1.4 });
+        let o = c.paint(shape, brown, { shade: brownDeep, sw: 1.4, texture: false, highlight: false, stroke: false });
+        const mx = bx + (tx - bx) * 0.5, my = by + (ty - by) * 0.5;
+        o += c.flat(c.poly([[tx, ty], [mx + nx * 0.9, my + ny * 0.9], [mx - nx * 0.9, my - ny * 0.9]], { r: 0.6 }), tip, 0.97);
+        o += c.ink(`M${bx + nx} ${by + ny} L${tx} ${ty} L${bx - nx} ${by - ny}`, { w: 2.4, color: ink });
         return o;
       };
-      // back rows first, so the front ones overlap them
-      for (let i = 0; i < 9; i++) s += spikeAt(Math.PI * (1.12 + i * 0.098), 19 + (i % 2) * 2, spikeBack, true);
-      for (let i = 0; i < 8; i++) s += spikeAt(Math.PI * (1.16 + i * 0.1), 16 + (i % 2) * 2, spike, true);
-      // back legs, tucked under the body
-      for (const x of [36, 76]) {
-        s += c.paint(c.rect(x - 6, 56, 12, 13, 5, 0.2), cream, { sw: 2, texture: false, shade: creamShade });
-        for (const dx of [-3.5, 0, 3.5]) s += `<ellipse cx="${x + dx}" cy="69" rx="1.6" ry="2" fill="${ink}"/>`;
+      // back spikes first, then the body covers their roots, then the front spikes
+      for (let i = 0; i < 8; i++) s += spike(Math.PI * (1.14 + i * 0.1), 19 + (i % 2) * 3, 6);
+      // legs behind the body
+      for (const x of [34, 72]) {
+        s += c.paint(c.rect(x - 6, 54, 12, 14, 5, 0.3), cream, { sw: 2.4, shade: creamShade, texture: false, stroke: false });
+        s += c.ink(`M${x - 6} 56 v12 q0 4 4 4 h4 q4 0 4 -4 v-12`, { w: 2.2, color: ink });
+        for (const dx of [-3, 0, 3]) s += c.ink(`M${x + dx} 66 v3`, { w: 1.4, color: ink });
       }
-      // body: rounded brown with a few fur chevrons
-      s += c.paint(c.blob(cx, cy, rx, ry, { n: 14, j: 0.02 }), brown, { shade: brownDeep, sw: 2.4 });
-      s += c.flat(c.blob(48, 36, 20, 5, { n: 10 }), brownLight, 0.55);
-      for (let i = 0; i < 6; i++) s += c.ink(`M${f(26 + i * 8)} ${f(52 + (i % 2) * 4)} l3 -3 l3 3`, { w: 1.2, color: brownDeep, opacity: 0.5 });
-      // cream head and belly
-      s += c.paint(c.blob(88, 50, 16, 14, { n: 12, j: 0.025 }), cream, { shade: creamShade, sw: 2.2 });
+      // body with speckled fur
+      s += c.paint(c.blob(cx, cy, rx, ry, { n: 16, j: 0.03 }), brown, { shade: brownDeep, sw: 2.8, texture: false, stroke: false });
+      s += c.ink(c.blob(cx, cy, rx, ry, { n: 16, j: 0.03 }), { w: 2.8, color: ink });
+      for (let i = 0; i < 16; i++) {
+        const x = 24 + ((i * 37) % 52), y = 30 + ((i * 23) % 26);
+        s += `<ellipse cx="${x}" cy="${y}" rx="${1.4 + (i % 3) * 0.4}" ry="1" fill="${brownDeep}" opacity=".7"/>`;
+      }
+      // cream head: fuzzy edge on the muzzle
+      s += c.paint(c.blob(86, 47, 16, 15, { n: 16, j: 0.05 }), cream, { shade: creamShade, sw: 1.6, texture: false, stroke: false });
+      s += c.paint(c.blob(100, 49, 9, 7, { n: 12, j: 0.04 }), cream, { shade: creamShade, sw: 1.6, texture: false, stroke: false });
+      s += c.ink(c.blob(86, 47, 16, 15, { n: 16, j: 0.05 }), { w: 2.4, color: ink });
+      s += c.ink(c.blob(100, 49, 9, 7, { n: 12, j: 0.04 }), { w: 2.2, color: ink });
+      // round ear with pink inside
+      s += c.paint(c.blob(74, 33, 7, 7, { n: 10 }), brown, { sw: 2, texture: false, highlight: false, shade: brownDeep });
+      s += c.flat(c.blob(74, 33, 4, 4, { n: 8 }), pink, 0.95);
+      // big eye with highlight
+      s += `<ellipse cx="92" cy="42" rx="4.6" ry="5.4" fill="${ink}"/><circle cx="93.4" cy="40.2" r="1.7" fill="#fff"/>`;
+      // blush, smile, dot nose on a pointed snout
+      s += `<ellipse cx="88" cy="54" rx="3.6" ry="2.6" fill="${cheek}" opacity=".85"/>`;
+      s += c.ink('M92 57 q5 3 10 -2', { w: 1.8, color: ink });
+            s += `<circle cx="106" cy="46" r="3.2" fill="${ink}"/><circle cx="105" cy="44.8" r="1" fill="#fff"/>`;
+      // front feet with toes
+      for (const x of [60, 96]) {
+        s += c.paint(c.blob(x, 66, 8, 5.5), cream, { sw: 2.2, shade: creamShade, texture: false, stroke: false });
+        s += c.ink(c.blob(x, 66, 8, 5.5), { w: 2, color: ink });
+        for (const dx of [-3, 0, 3]) s += c.ink(`M${x + dx} 68 v2`, { w: 1.4, color: ink });
+      }
       // front spikes along the shoulder, over the body edge
-      for (let i = 0; i < 4; i++) s += spikeAt(Math.PI * (1.22 + i * 0.1), 12, spike, true);
-      // dark eye mask, ear and eye
-      s += c.flat(c.blob(87, 42, 8, 7, { n: 10, j: 0.03 }), brownDeep, 0.95);
-      s += c.paint(c.blob(74, 36, 6, 6, { n: 10 }), brownDeep, { sw: 1.8, texture: false, highlight: false });
-      s += c.flat(c.blob(74, 36, 3.4, 3.4, { n: 8 }), pink, 0.95);
-      s += `<ellipse cx="91" cy="43" rx="3.4" ry="4.2" fill="${ink}"/><circle cx="92.1" cy="41.6" r="1.25" fill="#fff"/>`;
-      // blush, smile and round nose
-      s += `<ellipse cx="86" cy="53" rx="3.4" ry="2.2" fill="${pink}" opacity=".6"/>`;
-      s += c.ink('M97 55 q3.5 2.6 6.5 -1', { w: 1.5, color: ink, opacity: 0.85 });
-      s += `<circle cx="105" cy="49" r="3.2" fill="${ink}"/><circle cx="104" cy="47.8" r="1" fill="#fff"/>`;
-      // front feet with dark claws
-      for (const x of [54, 94]) {
-        s += c.paint(c.blob(x, 65, 8, 5.5), cream, { sw: 1.9, texture: false, shade: creamShade });
-        for (const dx of [-3.5, 0, 3.5]) s += `<ellipse cx="${x + dx}" cy="70" rx="1.6" ry="2.1" fill="${ink}"/>`;
-      }
+      for (let i = 0; i < 4; i++) s += spike(Math.PI * (1.22 + i * 0.1), 15, 5);
       return s;
     },
   },
