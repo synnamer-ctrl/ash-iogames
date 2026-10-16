@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { P, LINE, darken, lighten, fmt as f } from './lib.mjs';
 
 const SOIL = '#9B6B4C', SOIL_DEEP = '#7A5038';
@@ -95,6 +96,8 @@ function butterfly(c, w, h, wing, spot) {
   out += `<circle cx="${f(w / 2 - 11)}" cy="${f(h * 0.2 - 10)}" r="1.8" fill="${P.ink}"/><circle cx="${f(w / 2 + 11)}" cy="${f(h * 0.2 - 10)}" r="1.8" fill="${P.ink}"/>`;
   return out;
 }
+
+const HEDGEHOG_PNG = readFileSync(new URL('../../assets-src/hedgehog-web.png', import.meta.url)).toString('base64');
 
 export const assets = [
   {
@@ -313,55 +316,9 @@ export const assets = [
     },
   },
   {
-    key: 'hedgehog', dir: 'characters', w: 110, h: 74,
-    draw: (c) => {
-      // reference look: layered spikes with cream tips, textured brown body, cream face with a dark eye mask
-      const brown = '#7A5238', brownDeep = '#4E3322', brownLight = '#9A6E4F', spike = '#4A2F20', spikeTip = '#F3E2C6', cream = '#FBF1E0', creamShade = '#E2CDAE', pink = '#F2A0A0', ink = '#2B1B12';
-      let s = c.groundShadow(54, 70, 44, 5);
-      // back legs
-      for (const x of [30, 78]) {
-        s += c.paint(c.rect(x - 7, 52, 14, 16, 6, 0.2), cream, { sw: 2.2, texture: false, shade: creamShade });
-        s += c.paint(c.blob(x, 68, 9, 4.5), cream, { sw: 1.8, texture: false, highlight: false });
-        for (const dx of [-4, 0, 4]) s += `<ellipse cx="${x + dx}" cy="70" rx="1.7" ry="2.2" fill="${ink}"/>`;
-      }
-      // body: rounded brown with a textured fur shade
-      s += c.paint(c.blob(52, 42, 39, 24, { n: 14, j: 0.02 }), brown, { shade: brownDeep, sw: 2.6 });
-      s += c.flat(c.blob(44, 34, 22, 6, { n: 10 }), brownLight, 0.6);
-      for (let i = 0; i < 6; i++) s += c.ink(`M${f(30 + i * 9)} ${f(48 + (i % 2) * 4)} q4 -4 8 0`, { w: 1.2, color: brownDeep, opacity: 0.45 });
-      // layered spikes: three rows of cones, back row first, each with a cream tip
-      const rows = [[36, 22, 13, spike], [31, 18, 11, '#5A3A28'], [25, 14, 9, spike]];
-      rows.forEach(([rx, ry, len, col], row) => {
-        const count = 10 - row;
-        for (let i = 0; i < count; i++) {
-          const a = Math.PI * 1.04 + ((i + 0.3 * row) / count) * Math.PI * 0.8;
-          const bx = 54 + Math.cos(a) * rx, by = 42 + Math.sin(a) * ry;
-          const ln = len + (i % 2 ? 2 : 0);
-          const tx = bx + Math.cos(a - 0.12) * ln, ty = by + Math.sin(a - 0.12) * ln;
-          const nx = -Math.sin(a) * 4.2, ny = Math.cos(a) * 4.2;
-          s += c.paint(c.poly([[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]], { r: 1.6 }), col, { sw: 1.8, texture: false, highlight: false });
-          s += c.flat(c.poly([[tx, ty], [bx + (tx - bx) * 0.45 + nx * 0.4, by + (ty - by) * 0.45 + ny * 0.4], [bx + (tx - bx) * 0.45 - nx * 0.4, by + (ty - by) * 0.45 - ny * 0.4]], { r: 1 }), spikeTip, 0.95);
-        }
-      });
-      // cream face: a large rounded patch on the front, with a soft shade
-      s += c.paint(c.blob(88, 44, 18, 16, { n: 12, j: 0.025 }), cream, { shade: creamShade, sw: 2.4 });
-      // dark eye mask
-      s += c.flat(c.blob(90, 36, 9, 7, { n: 10, j: 0.03 }), brownDeep, 0.95);
-      // round ear with a pink inside
-      s += c.paint(c.blob(80, 29, 6.5, 6.5, { n: 10 }), brownDeep, { sw: 2, texture: false, highlight: false });
-      s += c.flat(c.blob(80, 29, 3.8, 3.8, { n: 8 }), pink, 0.95);
-      // big glossy eye
-      s += `<ellipse cx="94" cy="38" rx="3.8" ry="4.6" fill="${ink}"/><circle cx="95.2" cy="36.4" r="1.4" fill="#fff"/><circle cx="93" cy="40" r="0.6" fill="#fff" opacity=".7"/>`;
-      // smile, blush and round nose
-      s += c.ink('M96 50 q4 3 7 -1', { w: 1.6, color: ink, opacity: 0.85 });
-      s += `<ellipse cx="89" cy="48" rx="3.6" ry="2.4" fill="${pink}" opacity=".6"/>`;
-      s += `<circle cx="106" cy="46" r="3.6" fill="${ink}"/><circle cx="104.8" cy="44.6" r="1.1" fill="#fff"/>`;
-      // front feet: cream with dark claws
-      for (const x of [56, 96]) {
-        s += c.paint(c.blob(x, 66, 9, 6), cream, { sw: 2, texture: false, shade: creamShade });
-        for (const dx of [-4, 0, 4]) s += `<ellipse cx="${x + dx}" cy="71" rx="1.8" ry="2.4" fill="${ink}"/>`;
-      }
-      return s;
-    },
+    // the user's own hedgehog drawing (cut out of the reference, see assets-src/hedgehog-web.png); embedded as a PNG inside the SVG
+    key: 'hedgehog', dir: 'characters', w: 110, h: 67,
+    draw: () => `<image x="0" y="0" width="110" height="67" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,${HEDGEHOG_PNG}"/>`,
   },
   {
     key: 'hedgehog_ball', dir: 'characters', w: 84, h: 74,

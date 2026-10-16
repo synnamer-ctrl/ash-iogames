@@ -810,7 +810,7 @@ export const ASSET_MANIFEST = {
   "hedgehog": {
     "path": "assets/characters/hedgehog.svg",
     "w": 110,
-    "h": 74,
+    "h": 67,
     "dir": "characters"
   },
   "hedgehog_ball": {
