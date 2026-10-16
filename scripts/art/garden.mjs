@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { P, LINE, darken, lighten, fmt as f } from './lib.mjs';
 
 const SOIL = '#9B6B4C', SOIL_DEEP = '#7A5038';
@@ -96,8 +95,6 @@ function butterfly(c, w, h, wing, spot) {
   out += `<circle cx="${f(w / 2 - 11)}" cy="${f(h * 0.2 - 10)}" r="1.8" fill="${P.ink}"/><circle cx="${f(w / 2 + 11)}" cy="${f(h * 0.2 - 10)}" r="1.8" fill="${P.ink}"/>`;
   return out;
 }
-
-const HEDGEHOG_PNG = readFileSync(new URL('../../assets-src/hedgehog-web.png', import.meta.url)).toString('base64');
 
 export const assets = [
   {
@@ -316,9 +313,57 @@ export const assets = [
     },
   },
   {
-    // the user's own hedgehog drawing (cut out of the reference, see assets-src/hedgehog-web.png); embedded as a PNG inside the SVG
-    key: 'hedgehog', dir: 'characters', w: 110, h: 67,
-    draw: () => `<image x="0" y="0" width="110" height="67" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,${HEDGEHOG_PNG}"/>`,
+    // redrawn to follow the reference: a round brown body, layered spikes with cream tips, a cream face with a dark eye mask
+    key: 'hedgehog', dir: 'characters', w: 110, h: 74,
+    draw: (c) => {
+      const brown = '#7A5238', brownDeep = '#4E3322', brownLight = '#9A6E4F', spike = '#4A2F20', spikeBack = '#3E2619', tip = '#F3E2C6', cream = '#FBF1E0', creamShade = '#E2CDAE', pink = '#F0A0A0', ink = '#2B1B12';
+      const cx = 58, cy = 48, rx = 34, ry = 21;
+      let s = c.groundShadow(58, 71, 44, 4.5);
+      // one spike: a tapered cone from a base point, with a cream cap on its tip
+      const spikeAt = (a, len, col, capped) => {
+        const bx = cx + Math.cos(a) * rx, by = cy + Math.sin(a) * ry;
+        const d = a - 0.28;
+        const tx = bx + Math.cos(d) * len, ty = by + Math.sin(d) * len;
+        const nx = -Math.sin(d) * 4.8, ny = Math.cos(d) * 4.8;
+        let o = c.paint(c.poly([[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]], { r: 1.2 }), col, { sw: 1.6, texture: false, highlight: false });
+        if (capped) {
+          const mx = bx + (tx - bx) * 0.7, my = by + (ty - by) * 0.7;
+          o += c.flat(c.poly([[tx, ty], [mx + nx * 1.05, my + ny * 1.05], [mx - nx * 1.05, my - ny * 1.05]], { r: 0.8 }), tip, 0.95);
+        }
+        return o;
+      };
+      // back rows first, so the front ones overlap them
+      for (let i = 0; i < 9; i++) s += spikeAt(Math.PI * (1.12 + i * 0.098), 19 + (i % 2) * 2, spikeBack, true);
+      for (let i = 0; i < 8; i++) s += spikeAt(Math.PI * (1.16 + i * 0.1), 16 + (i % 2) * 2, spike, true);
+      // back legs, tucked under the body
+      for (const x of [36, 76]) {
+        s += c.paint(c.rect(x - 6, 56, 12, 13, 5, 0.2), cream, { sw: 2, texture: false, shade: creamShade });
+        for (const dx of [-3.5, 0, 3.5]) s += `<ellipse cx="${x + dx}" cy="69" rx="1.6" ry="2" fill="${ink}"/>`;
+      }
+      // body: rounded brown with a few fur chevrons
+      s += c.paint(c.blob(cx, cy, rx, ry, { n: 14, j: 0.02 }), brown, { shade: brownDeep, sw: 2.4 });
+      s += c.flat(c.blob(48, 36, 20, 5, { n: 10 }), brownLight, 0.55);
+      for (let i = 0; i < 6; i++) s += c.ink(`M${f(26 + i * 8)} ${f(52 + (i % 2) * 4)} l3 -3 l3 3`, { w: 1.2, color: brownDeep, opacity: 0.5 });
+      // cream head and belly
+      s += c.paint(c.blob(88, 50, 16, 14, { n: 12, j: 0.025 }), cream, { shade: creamShade, sw: 2.2 });
+      // front spikes along the shoulder, over the body edge
+      for (let i = 0; i < 4; i++) s += spikeAt(Math.PI * (1.22 + i * 0.1), 12, spike, true);
+      // dark eye mask, ear and eye
+      s += c.flat(c.blob(87, 42, 8, 7, { n: 10, j: 0.03 }), brownDeep, 0.95);
+      s += c.paint(c.blob(74, 36, 6, 6, { n: 10 }), brownDeep, { sw: 1.8, texture: false, highlight: false });
+      s += c.flat(c.blob(74, 36, 3.4, 3.4, { n: 8 }), pink, 0.95);
+      s += `<ellipse cx="91" cy="43" rx="3.4" ry="4.2" fill="${ink}"/><circle cx="92.1" cy="41.6" r="1.25" fill="#fff"/>`;
+      // blush, smile and round nose
+      s += `<ellipse cx="86" cy="53" rx="3.4" ry="2.2" fill="${pink}" opacity=".6"/>`;
+      s += c.ink('M97 55 q3.5 2.6 6.5 -1', { w: 1.5, color: ink, opacity: 0.85 });
+      s += `<circle cx="105" cy="49" r="3.2" fill="${ink}"/><circle cx="104" cy="47.8" r="1" fill="#fff"/>`;
+      // front feet with dark claws
+      for (const x of [54, 94]) {
+        s += c.paint(c.blob(x, 65, 8, 5.5), cream, { sw: 1.9, texture: false, shade: creamShade });
+        for (const dx of [-3.5, 0, 3.5]) s += `<ellipse cx="${x + dx}" cy="70" rx="1.6" ry="2.1" fill="${ink}"/>`;
+      }
+      return s;
+    },
   },
   {
     key: 'hedgehog_ball', dir: 'characters', w: 84, h: 74,
