@@ -346,44 +346,91 @@ function blink(c, w, h, skin, glasses = false) {
 }
 
 function dog(c, w, h) {
-  const body = '#EDBE86', deep = '#C9915A';
+  const body = '#EDBE86', deep = '#C9915A', light = '#FBE3BF';
   let out = c.groundShadow(w / 2, h - 6, 52, 7);
-  for (const x of [34, 52, 94, 112]) out += c.paint(c.rect(x - 7, 62, 14, 34, 6, 0.4), body, { sw: 2.4, texture: false, shade: deep });
+  // far legs, then near legs: tapered with rounded paws and toe lines
+  for (const x of [34, 112]) {
+    out += c.paint(c.poly([[x - 6, 70], [x + 6, 70], [x + 7, 88], [x + 5, 95], [x - 5, 95], [x - 7, 88]], { r: 5 }), deep, { sw: 2.2, texture: false, highlight: false });
+  }
+  for (const x of [52, 94]) {
+    out += c.paint(c.poly([[x - 7, 66], [x + 7, 66], [x + 7, 88], [x + 8, 95], [x - 8, 95], [x - 7, 88]], { r: 5 }), body, { sw: 2.4, texture: false, shade: deep });
+    out += c.ink(`M${x - 4} 93 l3 -2 M${x + 1} 93 l3 -2`, { w: 1.4, color: P.ink, opacity: 0.5 });
+  }
+  // body with a lighter belly and a shade underneath
   out += c.paint(c.blob(72, 58, 50, 25), body, { shade: deep });
+  out += c.flat(c.blob(74, 70, 36, 9), light, 0.7);
   out += c.flat(c.blob(58, 50, 16, 11), deep, 0.8);
-  out += c.paint(c.blob(118, 36, 26, 24), body, { shade: deep });
-  out += c.paint(c.poly([[96, 22], [104, 14], [108, 50], [96, 52]], { r: 6 }), '#A87449', { sw: 2.4, texture: false });
-  out += c.paint(c.blob(138, 46, 9, 7), body, { sw: 2.2, texture: false, highlight: false });
-  out += `<ellipse cx="144" cy="42" rx="5" ry="4" fill="${P.ink}"/>`;
-  out += `<ellipse cx="122" cy="30" rx="3.4" ry="4.2" fill="${P.ink}"/><circle cx="123" cy="28.6" r="1.2" fill="#fff"/>`;
-  out += `<ellipse cx="126" cy="44" rx="4.6" ry="3" fill="${P.coral}" opacity=".45"/>`;
-  out += c.ink(`M134 52 q4 4 8 0`, { w: 2 });
+  out += c.ink(`M46 64 q16 8 40 0`, { w: 1.4, color: deep, opacity: 0.5 });
+  // head: rounder, with a cheek and a floppy ear
+  out += c.paint(c.blob(118, 36, 27, 25), body, { shade: deep });
+  out += c.flat(c.blob(124, 46, 12, 7), light, 0.8);
+  out += c.paint(c.poly([[96, 22], [104, 12], [110, 50], [98, 54]], { r: 7 }), '#A87449', { sw: 2.4, texture: false });
+  out += c.ink(`M100 26 q4 10 6 22`, { w: 1.6, color: '#7A4C2E', opacity: 0.6 });
+  out += c.paint(c.blob(138, 46, 10, 7.5), light, { sw: 2.2, texture: false, highlight: false });
+  out += `<ellipse cx="144" cy="42" rx="5.2" ry="4.2" fill="${P.ink}"/><ellipse cx="142.6" cy="40.6" rx="1.6" ry="1.2" fill="#fff"/>`;
+  // eye with a glint and brow, then a blush
+  out += `<ellipse cx="122" cy="30" rx="3.6" ry="4.4" fill="${P.ink}"/><circle cx="123.2" cy="28.4" r="1.3" fill="#fff"/>`;
+  out += c.ink(`M116 24 q5 -3 10 0`, { w: 1.8, color: '#7A4C2E', opacity: 0.8 });
+  out += `<ellipse cx="126" cy="44" rx="4.8" ry="3.1" fill="${P.coral}" opacity=".45"/>`;
+  // smile and a tongue
+  out += c.ink(`M132 52 q4 4 8 0`, { w: 2 });
+  out += c.paint(c.blob(138, 56, 4, 5), P.coral, { sw: 1.6, texture: false, highlight: false });
+  // collar with a tag that catches the light
   out += c.paint(c.rect(98, 54, 24, 8, 4, 0.3), P.coral, { sw: 2, texture: false });
-  out += `<circle cx="110" cy="64" r="4" fill="${P.sun}" stroke="${P.ink}" stroke-width="1.5"/>`;
+  out += `<circle cx="110" cy="64" r="4.5" fill="${P.sun}" stroke="${P.ink}" stroke-width="1.5"/><circle cx="108.6" cy="62.6" r="1.2" fill="#fff"/>`;
   return out;
 }
 
 function cat(c, w, h, sleeping = false) {
-  const fur = '#C4C0D6', deep = '#9F9AB8';
+  const fur = '#C4C0D6', deep = '#9F9AB8', stripe = '#8C88A8';
   let out = c.groundShadow(w / 2, h - 6, 40, 6);
   if (sleeping) {
     out += c.paint(c.blob(w / 2, h - 30, 46, 24), fur, { shade: deep });
+    // tabby stripes along the back
+    out += c.ink(`M${w / 2 - 26} ${h - 46} q8 -6 14 0 M${w / 2 - 6} ${h - 50} q8 -6 14 0 M${w / 2 + 14} ${h - 46} q8 -6 14 0`, { w: 2.2, color: stripe, opacity: 0.9 });
     out += c.paint(c.blob(w / 2 - 30, h - 34, 20, 18), fur, { shade: deep });
     out += c.paint(c.poly([[w / 2 - 46, h - 44], [w / 2 - 44, h - 62], [w / 2 - 32, h - 50]], { r: 3 }), fur, { sw: 2.2, texture: false });
     out += c.paint(c.poly([[w / 2 - 26, h - 50], [w / 2 - 18, h - 64], [w / 2 - 12, h - 46]], { r: 3 }), fur, { sw: 2.2, texture: false });
+    out += c.flat(c.poly([[w / 2 - 42, h - 55], [w / 2 - 40, h - 60], [w / 2 - 36, h - 52]], { r: 1 }), P.coralDeep, 0.8);
+    // closed eyes with lashes and a tiny nose
     out += c.ink(`M${w / 2 - 38} ${h - 34} q3 3 6 0 M${w / 2 - 28} ${h - 34} q3 3 6 0`, { w: 2 });
-    out += c.ink(`M${w / 2 + 40} ${h - 22} q10 -2 4 -16`, { w: 6, color: fur, opacity: 1 });
+    out += `<ellipse cx="${w / 2 - 33}" cy="${h - 30}" rx="3" ry="2" fill="${P.coral}" opacity=".35"/>`;
+    // tail wrapped around the front, with a soft highlight
+    out += c.ink(`M${w / 2 + 40} ${h - 22} q10 -2 4 -16`, { w: 7, color: deep, opacity: 0.9 });
+    out += c.ink(`M${w / 2 + 40} ${h - 22} q10 -2 4 -16`, { w: 5, color: fur, opacity: 1 });
+    out += c.ink(`M${w / 2 + 38} ${h - 26} q6 -2 6 -8`, { w: 1.6, color: '#FFFFFF', opacity: 0.6 });
     return out;
   }
+  // body with a white chest bib and a shaded belly
   out += c.paint(c.blob(w / 2, h - 34, 30, 30), fur, { shade: deep });
   out += c.paint(c.blob(w / 2, h - 30, 14, 18), P.white, { stroke: false, texture: false, highlight: false });
+  out += c.ink(`M${w / 2 - 26} ${h - 52} q4 -6 8 0 M${w / 2 + 18} ${h - 52} q4 -6 8 0`, { w: 2, color: stripe, opacity: 0.8 });
+  // ears with a pink inner shell
   out += c.paint(c.poly([[w / 2 - 26, 22], [w / 2 - 22, 0], [w / 2 - 8, 14]], { r: 3 }), fur, { sw: 2.2, texture: false });
   out += c.paint(c.poly([[w / 2 + 8, 14], [w / 2 + 22, 0], [w / 2 + 26, 22]], { r: 3 }), fur, { sw: 2.2, texture: false });
+  out += c.flat(c.poly([[w / 2 - 21, 16], [w / 2 - 18, 6], [w / 2 - 11, 15]], { r: 2 }), P.pink, 0.9);
+  out += c.flat(c.poly([[w / 2 + 11, 15], [w / 2 + 18, 6], [w / 2 + 21, 16]], { r: 2 }), P.pink, 0.9);
+  // head with tabby stripes on the forehead
   out += c.paint(c.blob(w / 2, 32, 28, 22), fur, { shade: deep });
-  out += c.face(w / 2, 30, 0.95, {});
-  out += c.ink(`M${w / 2 - 34} 36 l12 1 M${w / 2 + 34} 36 l-12 1`, { w: 1.6 });
-  out += c.paint(c.blob(w / 2 - 12, h - 8, 9, 6), P.white, { sw: 2, texture: false });
-  out += c.paint(c.blob(w / 2 + 12, h - 8, 9, 6), P.white, { sw: 2, texture: false });
+  out += c.ink(`M${w / 2} 14 v8 M${w / 2 - 7} 16 l2 6 M${w / 2 + 7} 16 l-2 6`, { w: 2, color: stripe, opacity: 0.9 });
+  out += c.flat(c.blob(w / 2 - 6, 22, 9, 6), '#FFFFFF', 0.25);
+  // almond eyes with slit pupils and a glint
+  for (const sx of [-1, 1]) {
+    const ex = w / 2 + sx * 11;
+    out += c.flat(c.blob(ex, 30, 7, 5.5, { n: 9, j: 0.02 }), '#8BD3B5', 1);
+    out += `<ellipse cx="${ex}" cy="30" rx="1.8" ry="4.6" fill="${P.ink}"/><circle cx="${ex + 1.4}" cy="28" r="1.1" fill="#fff"/>`;
+    out += c.ink(`M${ex - 8} 27 q8 -5 16 0`, { w: 1.6, color: P.ink, opacity: 0.9 });
+  }
+  // pink nose and mouth
+  out += c.paint(c.poly([[w / 2 - 3, 37], [w / 2 + 3, 37], [w / 2, 41]], { r: 1.5 }), P.coral, { sw: 1.2, texture: false, highlight: false });
+  out += c.ink(`M${w / 2} 41 q-3 4 -6 3 M${w / 2} 41 q3 4 6 3`, { w: 1.4, opacity: 0.8 });
+  // whiskers
+  out += c.ink(`M${w / 2 - 34} 36 l12 1 M${w / 2 - 34} 41 l12 -1 M${w / 2 + 34} 36 l-12 1 M${w / 2 + 34} 41 l-12 -1`, { w: 1.4, opacity: 0.7 });
+  // paws with toe separations
+  for (const x of [w / 2 - 12, w / 2 + 12]) {
+    out += c.paint(c.blob(x, h - 8, 9, 6), P.white, { sw: 2, texture: false });
+    out += c.ink(`M${x} ${h - 9} v5`, { w: 1, color: '#A9A6BD', opacity: 0.7 });
+  }
   return out;
 }
 
