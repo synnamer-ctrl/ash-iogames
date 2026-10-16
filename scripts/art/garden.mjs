@@ -98,6 +98,7 @@ function butterfly(c, w, h, wing, spot) {
 }
 
 const HEDGEHOG_PNG = readFileSync(new URL('../../assets-src/hedgehog-web-2.png', import.meta.url)).toString('base64');
+const HEDGEHOG_BALL_PNG = readFileSync(new URL('../../assets-src/hedgehog-ball-web.png', import.meta.url)).toString('base64');
 
 export const assets = [
   {
@@ -321,25 +322,9 @@ export const assets = [
     draw: () => `<image x="0" y="0" width="110" height="74" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,${HEDGEHOG_PNG}"/>`,
   },
   {
-    key: 'hedgehog_ball', dir: 'characters', w: 84, h: 74,
-    draw: (c) => {
-      let s = c.groundShadow(42, 68, 34, 5);
-      const v = [];
-      for (let i = 0; i < 26; i++) {
-        const a = (i / 26) * Math.PI * 2;
-        const r = i % 2 ? 36 : 28;
-        v.push([42 + Math.cos(a) * r, 38 + Math.sin(a) * r]);
-      }
-      s += c.paint(c.poly(v, { r: 3, j: 0.5 }), P.woodDeep, { shade: P.woodDark });
-      // lighter spine tips all around
-      for (let i = 0; i < 12; i++) {
-        const a = (i / 12) * Math.PI * 2 + 0.2;
-        s += c.ink(`M${f(42 + Math.cos(a) * 30)} ${f(38 + Math.sin(a) * 30)} l${f(Math.cos(a) * 5)} ${f(Math.sin(a) * 5)}`, { w: 2, color: '#E8C9A0', opacity: 0.7 });
-      }
-      // closed, happy eyes peeking out of the ball
-      s += c.ink('M32 40 q4 3 8 0 M46 40 q4 3 8 0', { w: 2, color: P.cream });
-      return s;
-    },
+    // the user's rolled-up hedgehog drawing (background removed, see assets-src/hedgehog-ball-web.png); embedded as a PNG inside the SVG
+    key: 'hedgehog_ball', dir: 'characters', w: 88, h: 74,
+    draw: () => `<image x="0" y="0" width="88" height="74" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,${HEDGEHOG_BALL_PNG}"/>`,
   },
   {
     key: 'snail', dir: 'characters', w: 86, h: 60,
