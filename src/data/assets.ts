@@ -3,7 +3,11 @@ import { defsForWorld } from './objects';
 import { worldInfo } from './worlds';
 import type { WorldId } from '../types/game';
 
-export const assetUrl = (key: AssetKey): string => `${import.meta.env.BASE_URL}${ASSET_MANIFEST[key].path}`;
+// The game draws the doodle set; `assets` is the original hand-drawn set kept under public/assets.
+const ASSET_FOLDER = 'assets-doodle';
+
+export const assetUrl = (key: AssetKey): string =>
+  `${import.meta.env.BASE_URL}${ASSET_MANIFEST[key].path.replace(/^assets\//, `${ASSET_FOLDER}/`)}`;
 
 export function assetSize(key: AssetKey): { w: number; h: number } {
   const a = ASSET_MANIFEST[key];
