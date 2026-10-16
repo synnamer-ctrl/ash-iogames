@@ -43,8 +43,11 @@ function grassTufts(c, x0, x1, y0, y1, n, color = P.leafDeep) {
   let s = '';
   for (let i = 0; i < n; i++) {
     const x = c.rand(x0, x1), y = c.rand(y0, y1), k = 0.8 + c.rand(0, 0.5);
-    // three wobbly blades, the middle one tallest
-    s += c.ink(`M${f(x - 6 * k)} ${f(y)} q${f(2 * k)} ${f(-9 * k)} ${f(4 * k)} ${f(-12 * k)} M${f(x)} ${f(y)} q${f(0.5 * k)} ${f(-10 * k)} ${f(2 * k)} ${f(-16 * k)} M${f(x + 6 * k)} ${f(y)} q${f(-1 * k)} ${f(-8 * k)} ${f(-3 * k)} ${f(-11 * k)}`, { w: 2.2, color, opacity: 0.55 });
+    // three pen-pressure blades: sharp tips, the middle one tallest, a little lean
+    const lean = c.jit(2);
+    s += c.pen([[x - 6 * k, y], [x - 4 * k + lean, y - 8 * k], [x - 3 * k + lean * 1.5, y - 12 * k]], { w: 2.4, color, opacity: 0.6, taper: 0.9, wobble: 0.3 });
+    s += c.pen([[x, y], [x + lean * 0.5, y - 10 * k], [x + 1.5 * k + lean, y - 16 * k]], { w: 2.6, color, opacity: 0.6, taper: 0.9, wobble: 0.3 });
+    s += c.pen([[x + 6 * k, y], [x + 5 * k + lean, y - 8 * k], [x + 3 * k + lean * 1.5, y - 11 * k]], { w: 2.4, color, opacity: 0.6, taper: 0.9, wobble: 0.3 });
   }
   return s;
 }
@@ -54,9 +57,17 @@ function tinyFlowers(c, x0, x1, y0, y1, n) {
   const cols = [P.white, P.pink, P.sun, P.lavender];
   for (let i = 0; i < n; i++) {
     const x = c.rand(x0, x1), y = c.rand(y0, y1), col = cols[i % cols.length];
+    // five hand-drawn petal loops around a centre dot
     for (let k = 0; k < 5; k++) {
-      const a = (k / 5) * Math.PI * 2;
-      s += `<circle cx="${f(x + Math.cos(a) * 3.6)}" cy="${f(y + Math.sin(a) * 3.6)}" r="2.6" fill="${col}"/>`;
+      const a = (k / 5) * Math.PI * 2 + c.jit(0.2);
+      const cx = x + Math.cos(a) * 3.8, cy = y + Math.sin(a) * 3.8;
+      const loop = [];
+      for (let t = 0; t <= 8; t++) {
+        const b = (t / 8) * Math.PI * 2;
+        loop.push([cx + Math.cos(b) * 2.6, cy + Math.sin(b) * 2.2]);
+      }
+      s += c.pen(loop, { w: 2.6, color: col === P.white ? '#B9B1A0' : darken(col, 0.25), opacity: 0.85, taper: 0.4, wobble: 0.15 });
+      s += `<path d="M${f(cx - 2)} ${f(cy - 1)} l2 1" stroke="none"/>`;
     }
     s += `<circle cx="${f(x)}" cy="${f(y)}" r="2" fill="${P.sunDeep}"/>`;
   }

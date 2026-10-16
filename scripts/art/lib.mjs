@@ -304,37 +304,100 @@ export class Ctx {
   }
 
   /**
-   * Hand-drawn doodle marks: a wobbly double-stroke ink line in a crayon colour.
-   * `kind` picks the mark; all of them are drawn with the same sketchy line so
-   * they feel like one doodler's hand.
+   * A pen-like stroke: a filled outline whose width swells and tapers along the
+   * path (like real pressure), with per-point wobble. `pts` are [x, y] pairs.
    */
-  doodle(kind, x, y, s = 1, { color = P.inkSoft, w = 3, opacity = 0.55, rot = 0 } = {}) {
-    let d;
+  pen(pts, { w = 3, color = P.inkSoft, opacity = 0.8, taper = 0.45, wobble = 0.5, overshoot = 0 } = {}) {
+    if (pts.length < 2) return '';
+    // optional overshoot: extend both ends a little past the drawn line
+    let p = pts.map(([x, y]) => [x + this.jit(wobble), y + this.jit(wobble)]);
+    if (overshoot) {
+      const [a, b] = [p[0], p[1]], [c, d] = [p[p.length - 2], p[p.length - 1]];
+      const ex = (a[0] - b[0]) * overshoot, ey = (a[1] - b[1]) * overshoot;
+      const fx = (d[0] - c[0]) * overshoot, fy = (d[1] - c[1]) * overshoot;
+      p = [[a[0] + ex, a[1] + ey], ...p, [d[0] + fx, d[1] + fy]];
+    }
+    const n = p.length;
+    const left = [], right = [];
+    for (let i = 0; i < n; i++) {
+      const prev = p[Math.max(0, i - 1)], next = p[Math.min(n - 1, i + 1)];
+      let tx = next[0] - prev[0], ty = next[1] - prev[1];
+      const l = Math.hypot(tx, ty) || 1;
+      tx /= l; ty /= l;
+      // pressure: fat in the middle, thin at both ends, with a little random bite
+      const t = n === 1 ? 0.5 : i / (n - 1);
+      const press = 1 - taper + taper * Math.sin(Math.PI * t) ** 0.6;
+      const hw = (w / 2) * press * (0.85 + this.r() * 0.3);
+      left.push([p[i][0] - ty * hw, p[i][1] + tx * hw]);
+      right.push([p[i][0] + ty * hw, p[i][1] - tx * hw]);
+    }
+    const outline = [...left, ...right.reverse()];
+    const d = smoothPath(outline, true, 0.6);
+    return `<path d="${d}" fill="${color}" opacity="${opacity}"/>`;
+  }
+
+  /** Sample a closed or open shape into a wobbly polyline for pen(). */
+  penPath(points, { closed = false, steps = 6 } = {}) {
+    const out = [];
+    const n = points.length;
+    const segs = closed ? n : n - 1;
+    for (let i = 0; i < segs; i++) {
+      const a = points[i], b = points[(i + 1) % n];
+      for (let k = 0; k < steps; k++) {
+        const t = k / steps;
+        out.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]);
+      }
+    }
+    if (!closed) out.push(points[n - 1]);
+    else out.push(out[0]);
+    return out;
+  }
+
+  /**
+   * Hand-drawn doodle marks, built from pen() strokes so they have pressure,
+   * overshoot and a second, lighter pass like real doodling.
+   */
+  doodle(kind, x, y, s = 1, { color = P.inkSoft, w = 3, opacity = 0.7, rot = 0 } = {}) {
+    let strokes = [];
+    const pass = (pts, o = {}) => strokes.push(this.pen(pts, { w, color, opacity, overshoot: 0.08, ...o }));
     switch (kind) {
-      case 'squiggle':
-        d = `M${f(-30 * s)} 0 q${f(10 * s)} ${f(-14 * s)} ${f(20 * s)} 0 t${f(20 * s)} 0 t${f(20 * s)} 0`;
-        break;
-      case 'spiral': {
+      case 'squiggle': {
         const pts = [];
-        for (let i = 0; i <= 40; i++) {
-          const a = i * 0.45, r = 1.2 * s * a;
-          pts.push([Math.cos(a) * r, Math.sin(a) * r]);
-        }
-        d = smoothPath(pts, false);
+        for (let i = 0; i <= 40; i++) pts.push([-44 * s + i * (88 * s / 40), Math.sin(i / 3.5) * 7 * s]);
+        pass(pts, { wobble: 0.8 });
         break;
       }
-      case 'arrow':
-        d = `M${f(-26 * s)} 0 q${f(26 * s)} ${f(-6 * s)} ${f(44 * s)} ${f(-4 * s)} M${f(26 * s)} ${f(-4 * s)} l${f(-10 * s)} ${f(-8 * s)} M${f(26 * s)} ${f(-4 * s)} l${f(-9 * s)} ${f(7 * s)}`;
+      case 'spiral': {
+        const pts = [];
+        for (let i = 0; i <= 52; i++) {
+          const a = i * 0.42 + this.jit(0.05), r = (1.6 + 0.9 * a) * s;
+          pts.push([Math.cos(a) * r, Math.sin(a) * r * 0.92]);
+        }
+        pass(pts, { wobble: 0.6, taper: 0.7 });
         break;
-      case 'loop':
-        d = `M${f(-22 * s)} 0 c0 ${f(-22 * s)} ${f(44 * s)} ${f(-22 * s)} ${f(44 * s)} 0 c0 ${f(22 * s)} ${f(-44 * s)} ${f(22 * s)} ${f(-44 * s)} ${f(-6 * s)}`;
+      }
+      case 'arrow': {
+        pass([[-30 * s, 2 * s], [-2 * s, -2 * s], [30 * s, -4 * s]], { wobble: 0.7 });
+        pass([[30 * s, -4 * s], [18 * s, -13 * s]], { wobble: 0.5 });
+        pass([[30 * s, -4 * s], [20 * s, 8 * s]], { wobble: 0.5 });
         break;
+      }
+      case 'loop': {
+        const pts = [];
+        for (let i = 0; i <= 30; i++) {
+          const a = (i / 30) * Math.PI * 2 * 1.08;
+          pts.push([Math.cos(a) * 24 * s, Math.sin(a) * 13 * s - 2 * s]);
+        }
+        pass(pts, { wobble: 0.9, taper: 0.5 });
+        break;
+      }
       default:
-        d = '';
+        break;
     }
-    const g = `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(rot)})">`;
-    // two overlapping passes, the second slightly offset, gives the sketchy line
-    return g + this.ink(d, { w, color, opacity }) + `<g transform="translate(${f(this.jit(1.2))} ${f(this.jit(1.2))})">${this.ink(d, { w: w * 0.45, color, opacity: opacity * 0.6 })}</g></g>`;
+    // a faint second pass, offset, makes the line look re-traced by hand
+    const first = strokes.join('');
+    const second = `<g transform="translate(${f(this.jit(1.4))} ${f(this.jit(1.4))}) scale(${f(1 + this.jit(0.03))})" opacity="0.45">${strokes.join('').replace(/opacity="[^"]+"/g, '')}</g>`;
+    return `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(rot)})">${second}${first}</g>`;
   }
 
   heart(cx, cy, s) {
