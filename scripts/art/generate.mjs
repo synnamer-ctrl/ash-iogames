@@ -1,6 +1,6 @@
 // Generates every SVG illustration in public/assets and the typed manifest
 // in src/data/asset-manifest.ts. Run with `npm run assets`.
-import { mkdirSync, writeFileSync, readdirSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readdirSync, readFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Ctx, svgDoc, hashSeed } from './lib.mjs';
@@ -20,6 +20,13 @@ for (const mod of ['town', 'garden', 'workshop', 'build', 'ui', 'backgrounds']) 
   }
 }
 const all = groups.flat();
+const spriteKeys = new Set(JSON.parse(readFileSync(join(root, 'scripts', 'art', 'sprite-keys.json'), 'utf8')));
+function spriteBody(a) {
+  const file = join(root, 'assets-src', 'sprites', `${a.key}.png`);
+  if (!existsSync(file)) throw new Error(`Missing sprite ${file}`);
+  const b64 = readFileSync(file).toString('base64');
+  return `<image x="0" y="0" width="${a.w}" height="${a.h}" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,${b64}"/>`;
+}
 
 // hand-drawn wobble: displace every edge with fractal noise, seeded per asset so each drawing wobbles differently
 function doodleFilter(a) {
@@ -37,7 +44,8 @@ for (const a of all) {
   if (seen.has(a.key)) throw new Error('Duplicate asset key ' + a.key);
   seen.add(a.key);
   const c = new Ctx(a.key);
-  const body = a.draw(c);
+  // keys cut from the doodle sheet (scripts/art/cut-sprites.py) embed their sprite; the rest keep their drawn art
+  const body = spriteKeys.has(a.key) ? spriteBody(a) : a.draw(c);
   const defs = a.defs ? a.defs(c) : '';
   const path = `assets/${a.dir}/${a.key}.svg`;
   mkdirSync(join(outRoot, a.dir), { recursive: true });
