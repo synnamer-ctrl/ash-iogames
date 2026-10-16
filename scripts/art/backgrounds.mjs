@@ -75,11 +75,18 @@ function tinyFlowers(c, x0, x1, y0, y1, n) {
 }
 
 function sky(c, color = P.sky) {
-  let s = `<rect x="${-BX}" y="${-BY}" width="${FW}" height="${FH}" fill="${color}"/>`;
-  s += texture(c, -BX, -BY, FW, 700, lighten(color, 0.5), 0.25, 0.12, -12);
-  // soft painted background clouds
+  // a gentle vertical wash: deeper blue at the top, lighter toward the horizon
+  const gid = c.uid('sky');
+  let s = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${darken(color, 0.08)}"/><stop offset="0.7" stop-color="${color}"/><stop offset="1" stop-color="${lighten(color, 0.35)}"/></linearGradient></defs>`;
+  s += `<rect x="${-BX}" y="${-BY}" width="${FW}" height="${FH}" fill="url(#${gid})"/>`;
+  s += texture(c, -BX, -BY, FW, 700, lighten(color, 0.5), 0.2, 0.1, -12);
+  // soft background clouds: a flat body with a lighter top, drawn as overlapping lobes
   for (const [x, y, sc] of [[180, 120, 1.1], [760, 70, 0.8], [1350, 150, 1]]) {
-    s += `<g opacity=".35">${c.flat(c.blob(x, y, 120 * sc, 26 * sc), P.white)}${c.flat(c.blob(x - 30 * sc, y - 18 * sc, 60 * sc, 30 * sc), P.white)}${c.flat(c.blob(x + 40 * sc, y - 14 * sc, 50 * sc, 26 * sc), P.white)}</g>`;
+    const lobes = [[x, y, 110 * sc, 30 * sc], [x - 58 * sc, y - 10 * sc, 56 * sc, 34 * sc], [x + 52 * sc, y - 18 * sc, 62 * sc, 40 * sc]];
+    s += `<g opacity=".5">`;
+    for (const [lx, ly, rx, ry] of lobes) s += c.flat(c.blob(lx, ly, rx, ry, { n: 11, j: 0.04 }), P.white);
+    s += c.flat(c.blob(x, y + 6 * sc, 118 * sc, 14 * sc), lighten(color, 0.1), 0.7);
+    s += `</g>`;
   }
   return s;
 }

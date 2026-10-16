@@ -13,8 +13,13 @@ export function cloud(c, w, h, puffs, { body = P.white, shade = '#DCE5F4', line 
   for (const p of parts) out += c.flat(p, shade);
   out += `<g clip-path="url(#${clip})">`;
   for (const p of parts) out += `<g transform="translate(-4 -6)">${c.flat(p, body)}</g>`;
+  // shaded underside: the lower part of the cloud sits in a cooler tint
+  out += c.flat(c.rect(0, h * 0.7, w, h * 0.4, 10, 2), shade, 0.55);
   out += c.pencil({ x: w * 0.12, y: h * 0.2, w: w * 0.76, h: h * 0.6 }, { color: P.skyDeep, opacity: 0.1, density: 0.7, angle: -20 });
   out += `</g>`;
+  // one soft highlight on the largest puff, upper-left (the light source)
+  const [hx, hy, hr] = puffs.reduce((a, b) => (b[2] > a[2] ? b : a));
+  out += c.ink(`M${f(hx - hr * 0.62)} ${f(hy - hr * 0.12)} q${f(hr * 0.1)} ${f(-hr * 0.7)} ${f(hr * 0.72)} ${f(-hr * 0.46)}`, { w: Math.max(3, hr * 0.12), color: '#FFFFFF', opacity: 0.85 });
   return out;
 }
 
