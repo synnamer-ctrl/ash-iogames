@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" width="400" height="280">
+  <title>Cloud</title>
+  <defs>
+    <linearGradient id="wash" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#D8ECF8"/>
+    </linearGradient>
+    <clipPath id="body">
+      <path d="M92 218 C46 218 36 166 76 152 C64 102 124 80 152 108 C166 58 244 50 260 102 C306 80 352 118 330 156 C376 164 370 218 322 218 Z"/>
+    </clipPath>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>
+  </defs>
+  <ellipse cx="200" cy="246" rx="150" ry="13" fill="#38454A" opacity="0.14" filter="url(#soft)"/>
+  <g filter="url(#wc)">
+    <path d="M92 218 C46 218 36 166 76 152 C64 102 124 80 152 108 C166 58 244 50 260 102 C306 80 352 118 330 156 C376 164 370 218 322 218 Z" fill="url(#wash)"/>
+    <g clip-path="url(#body)">
+      <path d="M30 200 C90 180 150 196 210 190 C262 184 310 196 380 184 L380 240 L30 240 Z" fill="#BFDDF2" opacity="0.75"/>
+      <path d="M160 70 C190 40 250 60 250 100" fill="none" stroke="#9EDDF5" stroke-width="10" opacity="0.35"/>
+    </g>
+    <path d="M92 218 C46 218 36 166 76 152 C64 102 124 80 152 108 C166 58 244 50 260 102 C306 80 352 118 330 156 C376 164 370 218 322 218 Z" fill="none" stroke="#6F8FAE" stroke-width="3.6" stroke-linejoin="round"/>
+    <path d="M96 150 C92 124 116 112 130 124" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" opacity="0.95"/>
+    <path d="M186 86 C196 70 224 68 236 84" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+    <ellipse cx="178" cy="152" rx="5" ry="6.5" fill="#38454A"/>
+    <ellipse cx="222" cy="152" rx="5" ry="6.5" fill="#38454A"/>
+    <circle cx="180" cy="150" r="1.8" fill="#FFFFFF"/>
+    <circle cx="224" cy="150" r="1.8" fill="#FFFFFF"/>
+    <circle cx="160" cy="170" r="9" fill="#F58F83" opacity="0.45"/>
+    <circle cx="240" cy="170" r="9" fill="#F58F83" opacity="0.45"/>
+    <path d="M186 168 Q200 181 214 168" fill="none" stroke="#38454A" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,511 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Asset review gallery (dev only)</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; font: 14px system-ui, sans-serif; background: #e9e9ec; color: #222; }
+  header { padding: 14px 18px; background: #fff; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 2; display: flex; gap: 16px; align-items: center; }
+  header h1 { font-size: 16px; margin: 0; }
+  header label { display: flex; gap: 6px; align-items: center; }
+  main { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--cell, 300px), 1fr)); gap: 14px; padding: 16px; }
+  .card { margin: 0; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 2px #0002; }
+  .stage { background: repeating-conic-gradient(#f4f4f6 0 25%, #fff 0 50%) 0 0/20px 20px; display: grid; place-items: center; padding: 10px; height: var(--cell, 300px); }
+  .stage svg { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+  figcaption { display: grid; gap: 2px; padding: 10px 12px; }
+  figcaption b { font-size: 15px; }
+  figcaption span { color: #666; font-size: 12px; }
+  figcaption em { font-style: normal; font-size: 12px; font-weight: 600; }
+  .ok { color: #2a7a3a; } .bad { color: #b02a2a; }
+  body.zoom-s { --cell: 200px; } body.zoom-l { --cell: 460px; }
+</style></head><body>
+<header><h1>Little Wonder World — asset review (dev only)</h1>
+<label>Preview size
+  <select onchange="document.body.className=this.value">
+    <option value="zoom-s">Small (in-game scale)</option>
+    <option value="" selected>Medium</option>
+    <option value="zoom-l">Large (outlines)</option>
+  </select></label>
+<span>8 samples</span></header>
+<main><figure class="card"><div class="stage" data-zoom="1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <title>Home button</title>
+  <defs>
+    <radialGradient id="coin" cx="0.38" cy="0.32" r="0.8">
+      <stop offset="0" stop-color="#FFEBA3"/>
+      <stop offset="0.6" stop-color="#FFD66B"/>
+      <stop offset="1" stop-color="#E9B24A"/>
+    </radialGradient>
+    <linearGradient id="roofG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#D7CBFF"/>
+      <stop offset="1" stop-color="#A391DD"/>
+    </linearGradient>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#wc)">
+    <circle cx="64" cy="66" r="56" fill="#E9B24A" opacity="0.35"/>
+    <circle cx="64" cy="62" r="54" fill="url(#coin)" stroke="#B9842A" stroke-width="4"/>
+    <path d="M22 50 C28 30 46 18 66 18" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.75"/>
+    <!-- house -->
+    <path d="M34 66 L64 40 L94 66 Z" fill="url(#roofG)" stroke="#5E4E9A" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M42 66 L42 92 C42 96 45 98 49 98 L79 98 C83 98 86 96 86 92 L86 66 L64 48 Z" fill="#F4EEFF" stroke="#5E4E9A" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M56 98 L56 80 C56 74 72 74 72 80 L72 98" fill="#FFD66B" stroke="#5E4E9A" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M48 62 C54 56 62 56 64 60" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  </g>
+</svg>
+</div>
+  <figcaption><b>button_home</b><span>button_home.svg · SVG · viewBox 128×128</span><em class="ok">valid</em></figcaption></figure>
+<figure class="card"><div class="stage" data-zoom="1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 260" width="440" height="260">
+  <title>Small car</title>
+  <defs>
+    <linearGradient id="paint" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#FA9D90"/>
+      <stop offset="1" stop-color="#E2706A"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EAF8FF"/>
+      <stop offset="1" stop-color="#9EDDF5"/>
+    </linearGradient>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>
+  </defs>
+  <ellipse cx="220" cy="236" rx="200" ry="12" fill="#38454A" opacity="0.16" filter="url(#soft)"/>
+  <g filter="url(#wc)">
+    <!-- body -->
+    <path d="M40 176 C38 150 48 132 74 126 L146 106 C166 78 198 66 240 66 C280 66 306 92 330 118 L384 128 C412 134 424 150 424 178 L424 206 C424 214 416 218 404 218 L58 218 C46 218 40 210 40 198 Z" fill="url(#paint)" stroke="#8E4A40" stroke-width="3.6" stroke-linejoin="round"/>
+    <!-- lower shade band -->
+    <path d="M44 196 C120 206 320 206 418 194 L420 206 C420 214 412 218 402 218 L60 218 C48 218 42 210 44 196 Z" fill="#C9564D" opacity="0.45"/>
+    <!-- windows -->
+    <path d="M160 100 C176 90 204 88 226 88 L228 130 L144 130 C150 118 154 108 160 100 Z" fill="url(#glass)" stroke="#4E6B7E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M240 88 C262 88 290 92 306 106 L318 130 L240 130 Z" fill="url(#glass)" stroke="#4E6B7E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M174 98 C186 96 200 96 214 98" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+    <!-- roof highlight -->
+    <path d="M118 118 C150 92 182 78 222 76" fill="none" stroke="#FFD0C8" stroke-width="7" stroke-linecap="round" opacity="0.85"/>
+    <!-- door seam and handle -->
+    <path d="M236 140 L236 206" stroke="#8E4A40" stroke-width="2.4" stroke-linecap="round" opacity="0.7"/>
+    <rect x="262" y="160" width="18" height="6" rx="3" fill="#8E4A40" opacity="0.8"/>
+    <!-- headlight and bumper -->
+    <path d="M404 166 C412 162 420 166 420 176 C420 186 412 190 404 188 Z" fill="#FFD66B" stroke="#B88A2E" stroke-width="2.4"/>
+    <ellipse cx="404" cy="176" rx="4" ry="3" fill="#FFFFFF" opacity="0.9"/>
+    <path d="M48 196 L84 196" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+    <!-- wheel arches -->
+    <path d="M70 218 C70 184 104 178 118 190 C126 198 132 210 132 218 Z" fill="#B9544C" opacity="0.6"/>
+    <path d="M310 218 C310 184 344 178 358 190 C366 198 372 210 372 218 Z" fill="#B9544C" opacity="0.6"/>
+  </g>
+  <!-- wheels: separate group for animation -->
+  <g id="wheel-rear" filter="url(#wc)">
+    <circle cx="106" cy="218" r="34" fill="#3B4650" stroke="#25303A" stroke-width="3"/>
+    <circle cx="106" cy="218" r="20" fill="#C9D3DA" stroke="#5B6A74" stroke-width="2"/>
+    <circle cx="106" cy="218" r="6" fill="#FFD66B" stroke="#5B6A74" stroke-width="1.6"/>
+    <path d="M106 200 v36 M88 218 h36" stroke="#8D9AA3" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M96 208 C100 200 112 198 118 202" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  </g>
+  <g id="wheel-front" filter="url(#wc)">
+    <circle cx="344" cy="218" r="34" fill="#3B4650" stroke="#25303A" stroke-width="3"/>
+    <circle cx="344" cy="218" r="20" fill="#C9D3DA" stroke="#5B6A74" stroke-width="2"/>
+    <circle cx="344" cy="218" r="6" fill="#FFD66B" stroke="#5B6A74" stroke-width="1.6"/>
+    <path d="M344 200 v36 M326 218 h36" stroke="#8D9AA3" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M334 208 C338 200 350 198 356 202" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  </g>
+</svg>
+</div>
+  <figcaption><b>car</b><span>car.svg · SVG · viewBox 440×260</span><em class="ok">valid</em></figcaption></figure>
+<figure class="card"><div class="stage" data-zoom="1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 440" width="260" height="440">
+  <title>Child, waving</title>
+  <defs>
+    <linearGradient id="skin" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#FBDBBE"/>
+      <stop offset="1" stop-color="#F0BC93"/>
+    </linearGradient>
+    <linearGradient id="overall" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#8AB3E4"/>
+      <stop offset="1" stop-color="#6A93CC"/>
+    </linearGradient>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
+  </defs>
+  <ellipse cx="130" cy="428" rx="78" ry="10" fill="#38454A" opacity="0.16" filter="url(#soft)"/>
+  <g filter="url(#wc)">
+    <!-- legs -->
+    <path d="M92 318 L88 404 C88 410 96 412 104 410 L112 318 Z" fill="url(#overall)" stroke="#3F5F8E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M150 318 L154 404 C154 410 162 412 170 410 L168 318 Z" fill="url(#overall)" stroke="#3F5F8E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M84 402 C82 414 84 422 98 422 L118 422 C122 420 118 404 112 402 Z" fill="#8E5F4E" stroke="#5A3B2E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M150 402 C150 404 148 422 154 422 L172 422 C180 422 180 414 176 402 Z" fill="#8E5F4E" stroke="#5A3B2E" stroke-width="3" stroke-linejoin="round"/>
+    <!-- shirt -->
+    <path d="M84 196 C110 186 150 186 176 196 L184 300 C160 312 104 312 80 300 Z" fill="#F7A59B" stroke="#8E4A40" stroke-width="3.2" stroke-linejoin="round"/>
+    <!-- overalls -->
+    <path d="M96 236 L164 236 L172 330 C150 340 110 340 88 330 Z" fill="url(#overall)" stroke="#3F5F8E" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M110 232 L114 200 M150 232 L146 200" stroke="#3F5F8E" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="112" cy="250" r="4.5" fill="#FFD66B" stroke="#8E6E2E" stroke-width="1.6"/>
+    <circle cx="148" cy="250" r="4.5" fill="#FFD66B" stroke="#8E6E2E" stroke-width="1.6"/>
+    <path d="M104 292 C120 298 140 298 156 292" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+    <!-- left arm, relaxed -->
+    <path d="M84 200 C64 218 58 262 62 290 C64 300 76 300 78 292 C80 262 90 230 96 216 Z" fill="#F7A59B" stroke="#8E4A40" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M62 292 C56 296 58 306 66 308 C74 310 80 304 78 298 Z" fill="url(#skin)" stroke="#A8664A" stroke-width="2.6" stroke-linejoin="round"/>
+    <!-- right arm, waving up -->
+    <path d="M176 200 C198 176 212 140 214 110 C216 98 232 98 232 110 C232 146 220 186 194 220 Z" fill="#F7A59B" stroke="#8E4A40" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="224" cy="100" r="14" fill="url(#skin)" stroke="#A8664A" stroke-width="2.6"/>
+    <path d="M214 92 q4 -4 6 0 M226 88 q4 -4 6 0" stroke="#A8664A" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <!-- head -->
+    <path d="M70 118 C66 74 96 46 130 46 C166 46 194 74 190 118 C188 156 164 180 130 180 C96 180 72 156 70 118 Z" fill="url(#skin)" stroke="#A8664A" stroke-width="3.4" stroke-linejoin="round"/>
+    <!-- hair with a fringe -->
+    <path d="M66 112 C60 66 92 40 132 40 C170 40 198 66 194 112 C184 92 168 84 150 80 C134 92 104 96 88 88 C78 96 70 104 66 112 Z" fill="#6B4A3A" stroke="#4A3026" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M90 66 C96 52 116 46 130 48" fill="none" stroke="#9A7460" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+    <!-- sun hat -->
+    <path d="M42 82 C60 74 84 70 130 70 C176 70 200 74 218 82 C212 92 194 96 130 96 C66 96 48 92 42 82 Z" fill="#FFD66B" stroke="#B88A2E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M86 70 C92 52 168 52 174 70 C172 76 88 76 86 70 Z" fill="#FFD66B" stroke="#B88A2E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M86 78 C120 84 150 84 174 78" fill="none" stroke="#F58F83" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+    <!-- face -->
+    <ellipse cx="104" cy="128" rx="6" ry="8" fill="#38454A"/>
+    <ellipse cx="156" cy="128" rx="6" ry="8" fill="#38454A"/>
+    <circle cx="106" cy="125" r="2.2" fill="#FFFFFF"/>
+    <circle cx="158" cy="125" r="2.2" fill="#FFFFFF"/>
+    <circle cx="90" cy="150" r="10" fill="#F58F83" opacity="0.5"/>
+    <circle cx="170" cy="150" r="10" fill="#F58F83" opacity="0.5"/>
+    <path d="M112 150 Q130 168 148 150" fill="#FFFFFF" stroke="#38454A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M118 156 Q130 162 142 156" fill="#F58F83" opacity="0.8"/>
+    <!-- collar -->
+    <path d="M112 186 C118 194 142 194 148 186" fill="none" stroke="#8E4A40" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+</svg>
+</div>
+  <figcaption><b>child</b><span>child.svg · SVG · viewBox 260×440</span><em class="ok">valid</em></figcaption></figure>
+<figure class="card"><div class="stage" data-zoom="1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" width="400" height="280">
+  <title>Cloud</title>
+  <defs>
+    <linearGradient id="wash" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#D8ECF8"/>
+    </linearGradient>
+    <clipPath id="body">
+      <path d="M92 218 C46 218 36 166 76 152 C64 102 124 80 152 108 C166 58 244 50 260 102 C306 80 352 118 330 156 C376 164 370 218 322 218 Z"/>
+    </clipPath>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>
+  </defs>
+  <ellipse cx="200" cy="246" rx="150" ry="13" fill="#38454A" opacity="0.14" filter="url(#soft)"/>
+  <g filter="url(#wc)">
+    <path d="M92 218 C46 218 36 166 76 152 C64 102 124 80 152 108 C166 58 244 50 260 102 C306 80 352 118 330 156 C376 164 370 218 322 218 Z" fill="url(#wash)"/>
+    <g clip-path="url(#body)">
+      <path d="M30 200 C90 180 150 196 210 190 C262 184 310 196 380 184 L380 240 L30 240 Z" fill="#BFDDF2" opacity="0.75"/>
+      <path d="M160 70 C190 40 250 60 250 100" fill="none" stroke="#9EDDF5" stroke-width="10" opacity="0.35"/>
+    </g>
+    <path d="M92 218 C46 218 36 166 76 152 C64 102 124 80 152 108 C166 58 244 50 260 102 C306 80 352 118 330 156 C376 164 370 218 322 218 Z" fill="none" stroke="#6F8FAE" stroke-width="3.6" stroke-linejoin="round"/>
+    <path d="M96 150 C92 124 116 112 130 124" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" opacity="0.95"/>
+    <path d="M186 86 C196 70 224 68 236 84" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+    <ellipse cx="178" cy="152" rx="5" ry="6.5" fill="#38454A"/>
+    <ellipse cx="222" cy="152" rx="5" ry="6.5" fill="#38454A"/>
+    <circle cx="180" cy="150" r="1.8" fill="#FFFFFF"/>
+    <circle cx="224" cy="150" r="1.8" fill="#FFFFFF"/>
+    <circle cx="160" cy="170" r="9" fill="#F58F83" opacity="0.45"/>
+    <circle cx="240" cy="170" r="9" fill="#F58F83" opacity="0.45"/>
+    <path d="M186 168 Q200 181 214 168" fill="none" stroke="#38454A" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>
+</div>
+  <figcaption><b>cloud</b><span>cloud.svg · SVG · viewBox 400×280</span><em class="ok">valid</em></figcaption></figure>
+<figure class="card"><div class="stage" data-zoom="1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 400" width="420" height="400">
+  <title>Cottage</title>
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#FFF0D6"/>
+      <stop offset="1" stop-color="#F9D7B0"/>
+    </linearGradient>
+    <linearGradient id="roof" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#F9988C"/>
+      <stop offset="1" stop-color="#E2706A"/>
+    </linearGradient>
+    <linearGradient id="door" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#A9C9EE"/>
+      <stop offset="1" stop-color="#7FA8D6"/>
+    </linearGradient>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
+  </defs>
+  <ellipse cx="210" cy="384" rx="186" ry="14" fill="#38454A" opacity="0.14" filter="url(#soft)"/>
+  <g filter="url(#wc)">
+    <!-- chimney -->
+    <path d="M286 76 L306 76 L306 136 L286 136 Z" fill="#C9826E" stroke="#8E5F4E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M280 72 L312 72" stroke="#8E5F4E" stroke-width="5" stroke-linecap="round"/>
+    <!-- walls -->
+    <path d="M78 196 L78 350 C78 360 84 366 94 366 L326 366 C336 366 342 360 342 350 L342 196 Z" fill="url(#wall)" stroke="#8E5F4E" stroke-width="3.6" stroke-linejoin="round"/>
+    <!-- stone base -->
+    <path d="M78 330 C140 324 220 336 342 328 L342 366 L94 366 C84 366 78 360 78 350 Z" fill="#E7C3A0" opacity="0.8"/>
+    <path d="M100 344 h22 M146 344 h30 M200 346 h24 M250 344 h30 M296 346 h20" stroke="#B8917A" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
+    <!-- roof with a soft overhang -->
+    <path d="M52 204 C100 160 150 118 210 74 C262 116 316 160 368 204 C356 214 336 212 324 206 L96 206 C84 212 64 214 52 204 Z" fill="url(#roof)" stroke="#8E4A40" stroke-width="3.6" stroke-linejoin="round"/>
+    <g stroke="#B9544C" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8">
+      <path d="M120 180 q12 8 24 0 M150 166 q12 8 24 0 M180 152 q12 8 24 0 M214 146 q12 8 24 0 M246 158 q12 8 24 0 M276 172 q12 8 24 0"/>
+    </g>
+    <path d="M122 186 C160 158 190 130 214 96" fill="none" stroke="#FFD0C8" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+    <!-- round attic window -->
+    <circle cx="210" cy="176" r="15" fill="#CFEFFA" stroke="#8E5F4E" stroke-width="3"/>
+    <path d="M210 161 v30 M195 176 h30" stroke="#8E5F4E" stroke-width="2" opacity="0.8"/>
+    <!-- arched door -->
+    <path d="M176 366 L176 296 C176 262 226 262 226 296 L226 366 Z" fill="url(#door)" stroke="#4F6F98" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M186 300 C186 280 216 280 216 300" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.6"/>
+    <circle cx="216" cy="334" r="4" fill="#FFD66B" stroke="#8E5F4E" stroke-width="1.8"/>
+    <!-- left window with flower box -->
+    <rect x="108" y="234" width="50" height="46" rx="8" fill="#CFEFFA" stroke="#8E5F4E" stroke-width="3.2"/>
+    <path d="M133 234 v46 M108 257 h50" stroke="#8E5F4E" stroke-width="2.4"/>
+    <rect x="102" y="280" width="62" height="12" rx="5" fill="#B98255" stroke="#6B4530" stroke-width="2"/>
+    <circle cx="112" cy="274" r="6" fill="#F58F83" stroke="#8E4A40" stroke-width="1.5"/>
+    <circle cx="128" cy="270" r="6" fill="#FFD66B" stroke="#8E5F4E" stroke-width="1.5"/>
+    <circle cx="146" cy="274" r="6" fill="#C5B5F0" stroke="#6B5A9E" stroke-width="1.5"/>
+    <!-- right window -->
+    <rect x="262" y="234" width="56" height="50" rx="8" fill="#CFEFFA" stroke="#8E5F4E" stroke-width="3.2"/>
+    <path d="M290 234 v50 M262 259 h56" stroke="#8E5F4E" stroke-width="2.4"/>
+    <path d="M262 226 l0 -4 M318 226 l0 -4" stroke="#FFFFFF" stroke-width="0"/>
+  </g>
+  <!-- bushes and flowers -->
+  <g filter="url(#wc)">
+    <path d="M18 372 C10 346 40 326 62 336 C70 316 104 316 112 340 C134 340 146 368 126 380 L24 380 C16 380 14 376 18 372 Z" fill="#9BCF8A" stroke="#4E7F4E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M330 376 C324 350 350 332 372 340 C382 322 412 326 412 350 C414 370 404 378 392 378 L340 380 C334 380 330 378 330 376 Z" fill="#9BCF8A" stroke="#4E7F4E" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="44" cy="346" r="5" fill="#F58F83" stroke="#38454A" stroke-width="1.4"/>
+    <circle cx="82" cy="342" r="5" fill="#FFD66B" stroke="#38454A" stroke-width="1.4"/>
+    <circle cx="362" cy="356" r="5" fill="#FFFFFF" stroke="#38454A" stroke-width="1.4"/>
+    <circle cx="396" cy="360" r="5" fill="#C5B5F0" stroke="#38454A" stroke-width="1.4"/>
+  </g>
+</svg>
+</div>
+  <figcaption><b>cottage</b><span>cottage.svg · SVG · viewBox 420×400</span><em class="ok">valid</em></figcaption></figure>
+<figure class="card"><div class="stage" data-zoom="1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 300" width="360" height="300">
+  <title>Puppy</title>
+  <defs>
+    <linearGradient id="fur" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#FFF8EE"/>
+      <stop offset="1" stop-color="#EBDCC6"/>
+    </linearGradient>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
+  </defs>
+  <ellipse cx="170" cy="286" rx="132" ry="10" fill="#38454A" opacity="0.16" filter="url(#soft)"/>
+  <g filter="url(#wc)">
+    <!-- tail -->
+    <path d="M82 170 C60 150 52 116 60 92" fill="none" stroke="#38454A" stroke-width="15" stroke-linecap="round" opacity="0.9"/>
+    <path d="M82 170 C60 150 52 116 60 92" fill="none" stroke="#B5773F" stroke-width="9" stroke-linecap="round"/>
+    <!-- back legs (behind) -->
+    <path d="M104 226 L98 282 C98 288 108 290 116 288 L122 226 Z" fill="#E4D2B6" stroke="#8E7456" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M236 226 L232 282 C232 288 242 290 250 288 L256 226 Z" fill="#E4D2B6" stroke="#8E7456" stroke-width="3" stroke-linejoin="round"/>
+    <!-- body -->
+    <path d="M86 178 C78 146 120 128 178 130 C236 132 268 146 274 176 C280 204 262 218 240 218 L120 218 C98 218 90 200 86 178 Z" fill="url(#fur)" stroke="#8E7456" stroke-width="3.6" stroke-linejoin="round"/>
+    <!-- brown patches -->
+    <path d="M126 152 C146 132 182 132 198 148 C208 162 198 182 178 184 C160 188 136 182 126 172 C118 166 120 158 126 152 Z" fill="#B5773F" opacity="0.9"/>
+    <path d="M230 138 C242 132 256 142 258 156 C248 164 234 160 228 152 Z" fill="#B5773F" opacity="0.8"/>
+    <path d="M92 188 C102 182 112 188 114 198 C106 206 94 204 92 188 Z" fill="#B5773F" opacity="0.7"/>
+    <!-- front legs -->
+    <path d="M160 206 L156 282 C156 288 166 290 174 288 L180 206 Z" fill="url(#fur)" stroke="#8E7456" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M222 206 L218 282 C218 288 228 290 236 288 L242 206 Z" fill="url(#fur)" stroke="#8E7456" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M152 284 C150 292 158 296 172 296 L178 296 C182 292 180 286 176 284 Z" fill="#E4D2B6" stroke="#8E7456" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M214 284 C212 292 220 296 234 296 L240 296 C244 292 242 286 238 284 Z" fill="#E4D2B6" stroke="#8E7456" stroke-width="2.4" stroke-linejoin="round"/>
+    <!-- head -->
+    <path d="M250 100 C248 66 272 52 292 54 C320 56 334 80 330 104 C326 130 306 146 286 144 C264 142 252 124 250 100 Z" fill="url(#fur)" stroke="#8E7456" stroke-width="3.6" stroke-linejoin="round"/>
+    <path d="M262 80 C272 64 300 62 312 76 C306 88 282 92 262 80 Z" fill="#B5773F" opacity="0.85"/>
+    <!-- floppy ear hangs from the top of the head -->
+    <path d="M268 70 C244 74 232 106 240 138 C246 152 262 150 268 134 C274 116 276 94 268 70 Z" fill="#8E5A34" stroke="#5A3B2E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M256 96 C252 112 254 126 260 134" fill="none" stroke="#B5773F" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+    <!-- muzzle -->
+    <ellipse cx="318" cy="122" rx="24" ry="17" fill="#FFF8EE" stroke="#8E7456" stroke-width="2.6"/>
+    <path d="M302 134 C312 142 326 140 334 132" fill="none" stroke="#C9A77E" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+    <!-- nose -->
+    <ellipse cx="338" cy="108" rx="7" ry="5" fill="#38454A"/>
+    <ellipse cx="336" cy="106" rx="2" ry="1.4" fill="#FFFFFF" opacity="0.8"/>
+    <!-- eye with brow -->
+    <ellipse cx="300" cy="90" rx="6" ry="7.5" fill="#38454A"/>
+    <circle cx="302" cy="87" r="2.2" fill="#FFFFFF"/>
+    <path d="M288 80 Q298 74 308 80" fill="none" stroke="#5A3B2E" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="284" cy="110" r="8" fill="#F58F83" opacity="0.4"/>
+    <!-- mouth -->
+    <path d="M320 140 Q328 146 336 140" fill="none" stroke="#38454A" stroke-width="2.4" stroke-linecap="round"/>
+    <!-- coral bandana under the chin -->
+    <path d="M252 138 C268 156 302 158 322 140 L300 190 C288 196 274 190 262 180 Z" fill="#F58F83" stroke="#8E4A40" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M276 166 C284 170 292 170 298 166" fill="none" stroke="#FFD0C8" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  </g>
+</svg>
+</div>
+  <figcaption><b>dog</b><span>dog.svg · SVG · viewBox 360×300</span><em class="ok">valid</em></figcaption></figure>
+<figure class="card"><div class="stage" data-zoom="1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 440" width="300" height="440">
+  <title>Sunflower</title>
+  <defs>
+    <radialGradient id="petal" cx="0.5" cy="0.2" r="0.9">
+      <stop offset="0" stop-color="#FFE68C"/>
+      <stop offset="1" stop-color="#F7B84B"/>
+    </radialGradient>
+    <radialGradient id="disc" cx="0.4" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#A8704A"/>
+      <stop offset="1" stop-color="#6E4630"/>
+    </radialGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#B7E0A0"/>
+      <stop offset="1" stop-color="#6FA96A"/>
+    </linearGradient>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
+    <path id="petalShape" d="M0 0 C-22 -18 -26 -62 -8 -88 C-2 -96 4 -96 8 -88 C26 -62 22 -18 0 0 Z"/>
+  </defs>
+  <ellipse cx="150" cy="430" rx="82" ry="9" fill="#38454A" opacity="0.16" filter="url(#soft)"/>
+  <g filter="url(#wc)">
+    <!-- stem -->
+    <path d="M146 196 C140 270 156 330 148 424" fill="none" stroke="#38454A" stroke-width="12" stroke-linecap="round" opacity="0.8"/>
+    <path d="M146 196 C140 270 156 330 148 424" fill="none" stroke="#6FA96A" stroke-width="7" stroke-linecap="round"/>
+    <!-- leaves -->
+    <path d="M146 330 C112 316 84 292 74 252 C112 262 138 284 146 330 Z" fill="url(#leaf)" stroke="#4E7F4E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M150 300 C186 290 214 266 222 226 C188 236 160 258 150 300 Z" fill="url(#leaf)" stroke="#4E7F4E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M90 268 C104 282 122 292 140 298" fill="none" stroke="#4E7F4E" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <path d="M214 240 C200 258 180 272 158 284" fill="none" stroke="#4E7F4E" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  </g>
+  <!-- petals: 14 individually shaped, rotated -->
+  <g transform="translate(150 118)" filter="url(#wc)">
+    <g fill="url(#petal)" stroke="#B9782E" stroke-width="2.6" stroke-linejoin="round">
+      <use href="#petalShape" transform="rotate(0)"/>
+      <use href="#petalShape" transform="rotate(26)"/>
+      <use href="#petalShape" transform="rotate(52)"/>
+      <use href="#petalShape" transform="rotate(78)"/>
+      <use href="#petalShape" transform="rotate(103)"/>
+      <use href="#petalShape" transform="rotate(129)"/>
+      <use href="#petalShape" transform="rotate(154)"/>
+      <use href="#petalShape" transform="rotate(180)"/>
+      <use href="#petalShape" transform="rotate(206)"/>
+      <use href="#petalShape" transform="rotate(231)"/>
+      <use href="#petalShape" transform="rotate(257)"/>
+      <use href="#petalShape" transform="rotate(283)"/>
+      <use href="#petalShape" transform="rotate(309)"/>
+      <use href="#petalShape" transform="rotate(334)"/>
+    </g>
+    <!-- petal vein highlights -->
+    <g fill="none" stroke="#FFFBE6" stroke-width="2" stroke-linecap="round" opacity="0.7">
+      <path d="M0 -10 C-6 -34 -6 -56 0 -74"/>
+      <path d="M0 -10 C-6 -34 -6 -56 0 -74" transform="rotate(103)"/>
+      <path d="M0 -10 C-6 -34 -6 -56 0 -74" transform="rotate(206)"/>
+      <path d="M0 -10 C-6 -34 -6 -56 0 -74" transform="rotate(309)"/>
+    </g>
+    <!-- disc -->
+    <circle r="40" fill="url(#disc)" stroke="#4F3322" stroke-width="3"/>
+    <g fill="#3B2619" opacity="0.7">
+      <circle cx="-14" cy="-10" r="2.6"/><circle cx="2" cy="-16" r="2.6"/><circle cx="16" cy="-6" r="2.6"/>
+      <circle cx="-22" cy="6" r="2.6"/><circle cx="-6" cy="4" r="2.6"/><circle cx="10" cy="8" r="2.6"/>
+      <circle cx="22" cy="14" r="2.6"/><circle cx="-16" cy="20" r="2.6"/><circle cx="2" cy="22" r="2.6"/>
+      <circle cx="16" cy="24" r="2.6"/><circle cx="-6" cy="30" r="2.6"/><circle cx="8" cy="34" r="2.6"/>
+    </g>
+    <path d="M-22 -22 C-14 -30 -4 -32 4 -28" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.35"/>
+  </g>
+  <!-- face on the disc -->
+  <g transform="translate(150 118)">
+    <ellipse cx="-12" cy="-4" rx="3.6" ry="4.6" fill="#38454A"/>
+    <ellipse cx="12" cy="-4" rx="3.6" ry="4.6" fill="#38454A"/>
+    <circle cx="-11" cy="-6" r="1.3" fill="#FFFFFF"/>
+    <circle cx="13" cy="-6" r="1.3" fill="#FFFFFF"/>
+    <circle cx="-20" cy="8" r="5" fill="#F58F83" opacity="0.5"/>
+    <circle cx="20" cy="8" r="5" fill="#F58F83" opacity="0.5"/>
+    <path d="M-6 8 Q0 14 6 8" fill="none" stroke="#38454A" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+</svg>
+</div>
+  <figcaption><b>sunflower</b><span>sunflower.svg · SVG · viewBox 300×440</span><em class="ok">valid</em></figcaption></figure>
+<figure class="card"><div class="stage" data-zoom="1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 440" width="400" height="440">
+  <title>Round-canopy tree</title>
+  <defs>
+    <linearGradient id="leaf" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#B7E0A0"/>
+      <stop offset="0.6" stop-color="#9BCF8A"/>
+      <stop offset="1" stop-color="#7DB673"/>
+    </linearGradient>
+    <linearGradient id="bark" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#D9A074"/>
+      <stop offset="0.6" stop-color="#B98255"/>
+      <stop offset="1" stop-color="#8E5F3E"/>
+    </linearGradient>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
+  </defs>
+  <ellipse cx="200" cy="392" rx="120" ry="16" fill="#38454A" opacity="0.14" filter="url(#soft)"/>
+  <g filter="url(#wc)">
+    <!-- trunk with a slight fork -->
+    <path d="M180 250 C178 300 172 340 160 384 C176 392 224 392 240 384 C228 340 222 300 220 250 Z" fill="url(#bark)" stroke="#6B4530" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M196 258 C192 300 190 340 186 372" fill="none" stroke="#7A4F34" stroke-width="2.2" stroke-linecap="round" opacity="0.7"/>
+    <path d="M214 300 C236 286 252 270 258 250" fill="none" stroke="#B98255" stroke-width="9" stroke-linecap="round"/>
+    <path d="M214 300 C236 286 252 270 258 250" fill="none" stroke="#6B4530" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+    <!-- canopy: overlapping lobes, back first -->
+    <path d="M52 176 C30 150 40 110 74 112 C78 84 118 74 132 100 C150 80 190 84 196 110 C220 88 260 92 262 122 C300 116 326 150 312 180 C340 194 332 236 300 240 C296 262 256 268 240 250 C222 274 170 276 158 252 C124 262 84 254 80 228 C48 226 34 202 52 176 Z" fill="url(#leaf)" stroke="#4E7F4E" stroke-width="3.6" stroke-linejoin="round"/>
+    <!-- inner shade lobes -->
+    <path d="M90 230 C120 246 160 246 200 236 C230 228 270 236 296 226" fill="none" stroke="#6FA96A" stroke-width="12" stroke-linecap="round" opacity="0.55"/>
+    <path d="M110 150 C126 128 160 132 170 152" fill="none" stroke="#D5EFC0" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+    <path d="M226 146 C240 130 268 134 276 150" fill="none" stroke="#D5EFC0" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+    <!-- leaf clusters -->
+    <g fill="none" stroke="#4E7F4E" stroke-width="2.4" stroke-linecap="round" opacity="0.7">
+      <path d="M96 176 q8 -10 18 -2 q-8 2 -18 2"/>
+      <path d="M160 196 q8 -10 18 -2 q-8 2 -18 2"/>
+      <path d="M236 180 q8 -10 18 -2 q-8 2 -18 2"/>
+      <path d="M270 214 q8 -10 18 -2 q-8 2 -18 2"/>
+      <path d="M124 228 q8 -10 18 -2 q-8 2 -18 2"/>
+      <path d="M190 150 q8 -10 18 -2 q-8 2 -18 2"/>
+    </g>
+    <!-- a few blossoms and fruit -->
+    <g stroke="#38454A" stroke-width="1.6">
+      <circle cx="146" cy="168" r="6" fill="#FFD66B"/>
+      <circle cx="232" cy="200" r="6" fill="#F58F83"/>
+      <circle cx="286" cy="162" r="5.5" fill="#FFFFFF"/>
+      <circle cx="108" cy="206" r="5.5" fill="#F58F83"/>
+      <circle cx="200" cy="130" r="5.5" fill="#FFD66B"/>
+    </g>
+  </g>
+  <!-- grass tufts at the base -->
+  <g fill="none" stroke="#6FA96A" stroke-width="3" stroke-linecap="round">
+    <path d="M140 400 q-4 -14 -12 -20 M146 400 q0 -18 4 -24 M152 400 q6 -12 14 -16"/>
+    <path d="M248 400 q-6 -12 -14 -16 M254 400 q2 -16 -2 -24 M262 400 q6 -12 14 -16"/>
+  </g>
+</svg>
+</div>
+  <figcaption><b>tree</b><span>tree.svg · SVG · viewBox 400×440</span><em class="ok">valid</em></figcaption></figure></main></body></html>

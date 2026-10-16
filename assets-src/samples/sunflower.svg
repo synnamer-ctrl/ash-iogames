@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 440" width="300" height="440">
+  <title>Sunflower</title>
+  <defs>
+    <radialGradient id="petal" cx="0.5" cy="0.2" r="0.9">
+      <stop offset="0" stop-color="#FFE68C"/>
+      <stop offset="1" stop-color="#F7B84B"/>
+    </radialGradient>
+    <radialGradient id="disc" cx="0.4" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#A8704A"/>
+      <stop offset="1" stop-color="#6E4630"/>
+    </radialGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#B7E0A0"/>
+      <stop offset="1" stop-color="#6FA96A"/>
+    </linearGradient>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
+    <path id="petalShape" d="M0 0 C-22 -18 -26 -62 -8 -88 C-2 -96 4 -96 8 -88 C26 -62 22 -18 0 0 Z"/>
+  </defs>
+  <ellipse cx="150" cy="430" rx="82" ry="9" fill="#38454A" opacity="0.16" filter="url(#soft)"/>
+  <g filter="url(#wc)">
+    <!-- stem -->
+    <path d="M146 196 C140 270 156 330 148 424" fill="none" stroke="#38454A" stroke-width="12" stroke-linecap="round" opacity="0.8"/>
+    <path d="M146 196 C140 270 156 330 148 424" fill="none" stroke="#6FA96A" stroke-width="7" stroke-linecap="round"/>
+    <!-- leaves -->
+    <path d="M146 330 C112 316 84 292 74 252 C112 262 138 284 146 330 Z" fill="url(#leaf)" stroke="#4E7F4E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M150 300 C186 290 214 266 222 226 C188 236 160 258 150 300 Z" fill="url(#leaf)" stroke="#4E7F4E" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M90 268 C104 282 122 292 140 298" fill="none" stroke="#4E7F4E" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <path d="M214 240 C200 258 180 272 158 284" fill="none" stroke="#4E7F4E" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  </g>
+  <!-- petals: 14 individually shaped, rotated -->
+  <g transform="translate(150 118)" filter="url(#wc)">
+    <g fill="url(#petal)" stroke="#B9782E" stroke-width="2.6" stroke-linejoin="round">
+      <use href="#petalShape" transform="rotate(0)"/>
+      <use href="#petalShape" transform="rotate(26)"/>
+      <use href="#petalShape" transform="rotate(52)"/>
+      <use href="#petalShape" transform="rotate(78)"/>
+      <use href="#petalShape" transform="rotate(103)"/>
+      <use href="#petalShape" transform="rotate(129)"/>
+      <use href="#petalShape" transform="rotate(154)"/>
+      <use href="#petalShape" transform="rotate(180)"/>
+      <use href="#petalShape" transform="rotate(206)"/>
+      <use href="#petalShape" transform="rotate(231)"/>
+      <use href="#petalShape" transform="rotate(257)"/>
+      <use href="#petalShape" transform="rotate(283)"/>
+      <use href="#petalShape" transform="rotate(309)"/>
+      <use href="#petalShape" transform="rotate(334)"/>
+    </g>
+    <!-- petal vein highlights -->
+    <g fill="none" stroke="#FFFBE6" stroke-width="2" stroke-linecap="round" opacity="0.7">
+      <path d="M0 -10 C-6 -34 -6 -56 0 -74"/>
+      <path d="M0 -10 C-6 -34 -6 -56 0 -74" transform="rotate(103)"/>
+      <path d="M0 -10 C-6 -34 -6 -56 0 -74" transform="rotate(206)"/>
+      <path d="M0 -10 C-6 -34 -6 -56 0 -74" transform="rotate(309)"/>
+    </g>
+    <!-- disc -->
+    <circle r="40" fill="url(#disc)" stroke="#4F3322" stroke-width="3"/>
+    <g fill="#3B2619" opacity="0.7">
+      <circle cx="-14" cy="-10" r="2.6"/><circle cx="2" cy="-16" r="2.6"/><circle cx="16" cy="-6" r="2.6"/>
+      <circle cx="-22" cy="6" r="2.6"/><circle cx="-6" cy="4" r="2.6"/><circle cx="10" cy="8" r="2.6"/>
+      <circle cx="22" cy="14" r="2.6"/><circle cx="-16" cy="20" r="2.6"/><circle cx="2" cy="22" r="2.6"/>
+      <circle cx="16" cy="24" r="2.6"/><circle cx="-6" cy="30" r="2.6"/><circle cx="8" cy="34" r="2.6"/>
+    </g>
+    <path d="M-22 -22 C-14 -30 -4 -32 4 -28" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.35"/>
+  </g>
+  <!-- face on the disc -->
+  <g transform="translate(150 118)">
+    <ellipse cx="-12" cy="-4" rx="3.6" ry="4.6" fill="#38454A"/>
+    <ellipse cx="12" cy="-4" rx="3.6" ry="4.6" fill="#38454A"/>
+    <circle cx="-11" cy="-6" r="1.3" fill="#FFFFFF"/>
+    <circle cx="13" cy="-6" r="1.3" fill="#FFFFFF"/>
+    <circle cx="-20" cy="8" r="5" fill="#F58F83" opacity="0.5"/>
+    <circle cx="20" cy="8" r="5" fill="#F58F83" opacity="0.5"/>
+    <path d="M-6 8 Q0 14 6 8" fill="none" stroke="#38454A" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+</svg>

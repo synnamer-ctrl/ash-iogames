@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 440" width="400" height="440">
+  <title>Round-canopy tree</title>
+  <defs>
+    <linearGradient id="leaf" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#B7E0A0"/>
+      <stop offset="0.6" stop-color="#9BCF8A"/>
+      <stop offset="1" stop-color="#7DB673"/>
+    </linearGradient>
+    <linearGradient id="bark" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#D9A074"/>
+      <stop offset="0.6" stop-color="#B98255"/>
+      <stop offset="1" stop-color="#8E5F3E"/>
+    </linearGradient>
+    <filter id="wc" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="warp"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="3" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0.24  0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0.32 0" result="grainA"/>
+      <feComposite in="grainA" in2="warp" operator="in" result="grainIn"/>
+      <feMerge><feMergeNode in="warp"/><feMergeNode in="grainIn"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
+  </defs>
+  <ellipse cx="200" cy="392" rx="120" ry="16" fill="#38454A" opacity="0.14" filter="url(#soft)"/>
+  <g filter="url(#wc)">
+    <!-- trunk with a slight fork -->
+    <path d="M180 250 C178 300 172 340 160 384 C176 392 224 392 240 384 C228 340 222 300 220 250 Z" fill="url(#bark)" stroke="#6B4530" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M196 258 C192 300 190 340 186 372" fill="none" stroke="#7A4F34" stroke-width="2.2" stroke-linecap="round" opacity="0.7"/>
+    <path d="M214 300 C236 286 252 270 258 250" fill="none" stroke="#B98255" stroke-width="9" stroke-linecap="round"/>
+    <path d="M214 300 C236 286 252 270 258 250" fill="none" stroke="#6B4530" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+    <!-- canopy: overlapping lobes, back first -->
+    <path d="M52 176 C30 150 40 110 74 112 C78 84 118 74 132 100 C150 80 190 84 196 110 C220 88 260 92 262 122 C300 116 326 150 312 180 C340 194 332 236 300 240 C296 262 256 268 240 250 C222 274 170 276 158 252 C124 262 84 254 80 228 C48 226 34 202 52 176 Z" fill="url(#leaf)" stroke="#4E7F4E" stroke-width="3.6" stroke-linejoin="round"/>
+    <!-- inner shade lobes -->
+    <path d="M90 230 C120 246 160 246 200 236 C230 228 270 236 296 226" fill="none" stroke="#6FA96A" stroke-width="12" stroke-linecap="round" opacity="0.55"/>
+    <path d="M110 150 C126 128 160 132 170 152" fill="none" stroke="#D5EFC0" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+    <path d="M226 146 C240 130 268 134 276 150" fill="none" stroke="#D5EFC0" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+    <!-- leaf clusters -->
+    <g fill="none" stroke="#4E7F4E" stroke-width="2.4" stroke-linecap="round" opacity="0.7">
+      <path d="M96 176 q8 -10 18 -2 q-8 2 -18 2"/>
+      <path d="M160 196 q8 -10 18 -2 q-8 2 -18 2"/>
+      <path d="M236 180 q8 -10 18 -2 q-8 2 -18 2"/>
+      <path d="M270 214 q8 -10 18 -2 q-8 2 -18 2"/>
+      <path d="M124 228 q8 -10 18 -2 q-8 2 -18 2"/>
+      <path d="M190 150 q8 -10 18 -2 q-8 2 -18 2"/>
+    </g>
+    <!-- a few blossoms and fruit -->
+    <g stroke="#38454A" stroke-width="1.6">
+      <circle cx="146" cy="168" r="6" fill="#FFD66B"/>
+      <circle cx="232" cy="200" r="6" fill="#F58F83"/>
+      <circle cx="286" cy="162" r="5.5" fill="#FFFFFF"/>
+      <circle cx="108" cy="206" r="5.5" fill="#F58F83"/>
+      <circle cx="200" cy="130" r="5.5" fill="#FFD66B"/>
+    </g>
+  </g>
+  <!-- grass tufts at the base -->
+  <g fill="none" stroke="#6FA96A" stroke-width="3" stroke-linecap="round">
+    <path d="M140 400 q-4 -14 -12 -20 M146 400 q0 -18 4 -24 M152 400 q6 -12 14 -16"/>
+    <path d="M248 400 q-6 -12 -14 -16 M254 400 q2 -16 -2 -24 M262 400 q6 -12 14 -16"/>
+  </g>
+</svg>
