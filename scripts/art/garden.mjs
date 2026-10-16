@@ -315,17 +315,33 @@ export const assets = [
   {
     key: 'hedgehog', dir: 'characters', w: 110, h: 74,
     draw: (c) => {
+      const spine = P.woodDeep, tip = '#E8C9A0', belly = P.peach;
       let s = c.groundShadow(55, 68, 44, 5);
+      // back of spines: a dome, with a lighter tip on each spike
       const v = [];
       for (let i = 0; i <= 14; i++) {
         const a = Math.PI + (i / 14) * Math.PI;
         const r = i % 2 ? 46 : 36;
         v.push([50 + Math.cos(a) * r, 54 + Math.sin(a) * r * 0.9]);
       }
-      s += c.paint(c.poly(v, { r: 4, j: 0.6 }), P.woodDeep, { shade: P.woodDark });
-      s += c.paint(c.blob(84, 50, 22, 16, { rot: 0.2 }), P.peach, { shade: '#E8AE85' });
-      s += `<ellipse cx="104" cy="52" rx="4.4" ry="3.6" fill="${P.ink}"/><ellipse cx="88" cy="45" rx="3" ry="3.8" fill="${P.ink}"/><circle cx="89" cy="43.8" r="1.1" fill="#fff"/><ellipse cx="90" cy="55" rx="4" ry="2.4" fill="${P.coral}" opacity=".5"/>`;
-      s += c.paint(c.blob(40, 66, 9, 5), P.peach, { sw: 2, texture: false }) + c.paint(c.blob(74, 66, 9, 5), P.peach, { sw: 2, texture: false });
+      s += c.paint(c.poly(v, { r: 4, j: 0.6 }), spine, { shade: P.woodDark });
+      for (let i = 0; i < 9; i++) {
+        const a = Math.PI + 0.3 + (i / 8) * (Math.PI - 0.6);
+        const bx = 50 + Math.cos(a) * 40, by = 54 + Math.sin(a) * 36;
+        s += c.ink(`M${f(bx)} ${f(by)} l${f(Math.cos(a) * 6)} ${f(Math.sin(a) * 6)}`, { w: 2, color: tip, opacity: 0.7 });
+      }
+      // snout and face
+      s += c.paint(c.blob(84, 50, 22, 16, { rot: 0.2 }), belly, { shade: '#E8AE85' });
+      s += c.flat(c.blob(80, 56, 12, 6), '#FFF3E4', 0.7);
+      s += `<ellipse cx="104" cy="52" rx="4.6" ry="3.8" fill="${P.ink}"/><ellipse cx="103" cy="50.4" rx="1.4" ry="1.1" fill="#fff"/>`;
+      s += `<ellipse cx="88" cy="45" rx="3.2" ry="4" fill="${P.ink}"/><circle cx="89.1" cy="43.6" r="1.2" fill="#fff"/>`;
+      s += `<ellipse cx="90" cy="55" rx="4.2" ry="2.5" fill="${P.coral}" opacity=".5"/>`;
+      s += c.ink('M96 58 q4 2 7 -1', { w: 1.4, color: P.ink, opacity: 0.7 });
+      // small feet with toes
+      for (const x of [40, 74]) {
+        s += c.paint(c.blob(x, 66, 9, 5), belly, { sw: 2, texture: false });
+        s += c.ink(`M${x - 3} 67 v-2 M${x + 3} 67 v-2`, { w: 1, color: '#B07A52', opacity: 0.8 });
+      }
       return s;
     },
   },
@@ -334,12 +350,18 @@ export const assets = [
     draw: (c) => {
       let s = c.groundShadow(42, 68, 34, 5);
       const v = [];
-      for (let i = 0; i < 22; i++) {
-        const a = (i / 22) * Math.PI * 2;
+      for (let i = 0; i < 26; i++) {
+        const a = (i / 26) * Math.PI * 2;
         const r = i % 2 ? 36 : 28;
         v.push([42 + Math.cos(a) * r, 38 + Math.sin(a) * r]);
       }
       s += c.paint(c.poly(v, { r: 3, j: 0.5 }), P.woodDeep, { shade: P.woodDark });
+      // lighter spine tips all around
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * Math.PI * 2 + 0.2;
+        s += c.ink(`M${f(42 + Math.cos(a) * 30)} ${f(38 + Math.sin(a) * 30)} l${f(Math.cos(a) * 5)} ${f(Math.sin(a) * 5)}`, { w: 2, color: '#E8C9A0', opacity: 0.7 });
+      }
+      // closed, happy eyes peeking out of the ball
       s += c.ink('M32 40 q4 3 8 0 M46 40 q4 3 8 0', { w: 2, color: P.cream });
       return s;
     },
@@ -348,10 +370,64 @@ export const assets = [
     key: 'snail', dir: 'characters', w: 86, h: 60,
     draw: (c) => {
       let s = c.groundShadow(44, 54, 36, 5);
-      s += c.paint(c.poly([[6, 52], [70, 52], [82, 40], [78, 26], [70, 30], [66, 44]], { r: 8 }), '#E8D7B5', { shade: '#D2BE97' });
-      s += c.ink('M74 28 l-2 -14 M80 30 l4 -12', { w: 2 }) + `<circle cx="72" cy="13" r="3" fill="${P.ink}"/><circle cx="84" cy="17" r="3" fill="${P.ink}"/>`;
+      // body with a lighter top and a shaded underside
+      s += c.paint(c.poly([[6, 52], [70, 52], [82, 40], [78, 26], [70, 30], [66, 44]], { r: 8 }), '#EFE2C4', { shade: '#D2BE97' });
+      s += c.flat(c.blob(40, 46, 26, 4), '#B9A27C', 0.5);
+      // eye stalks with eyes
+      s += c.ink('M74 30 l-2 -14 M80 32 l4 -12', { w: 2.2, color: P.ink, opacity: 0.9 });
+      s += `<circle cx="72" cy="13" r="3.4" fill="${P.white}" stroke="${P.ink}" stroke-width="1.4"/><circle cx="72.8" cy="13.6" r="1.6" fill="${P.ink}"/>`;
+      s += `<circle cx="84" cy="17" r="3.4" fill="${P.white}" stroke="${P.ink}" stroke-width="1.4"/><circle cx="84.8" cy="17.6" r="1.6" fill="${P.ink}"/>`;
+      // shell: layered spiral with light and shade
       s += c.paint(c.blob(36, 30, 24, 22), P.coral, { shade: P.coralDeep });
-      s += c.ink(`M36 30 m-3 0 a3 3 0 1 1 6 0 a8 8 0 1 1 -14 2 a14 14 0 1 1 24 -6`, { w: 2.4, opacity: 0.7 });
+      s += c.flat(c.blob(30, 22, 9, 5, { rot: -0.3 }), '#FFD0C8', 0.8);
+      s += c.ink(`M36 30 m-3 0 a3 3 0 1 1 6 0 a8 8 0 1 1 -14 2 a14 14 0 1 1 24 -6`, { w: 2.4, opacity: 0.75 });
+      s += c.ink(`M36 30 m-7 3 a5 5 0 0 0 7 5`, { w: 1.4, color: P.white, opacity: 0.45 });
+      return s;
+    },
+  },
+  {
+    key: 'turtle', dir: 'characters', w: 110, h: 80,
+    draw: (c) => {
+      const shell = '#7FB89A', shellDeep = '#4F8A6E', skin = '#B9D98F';
+      let s = c.groundShadow(55, 74, 46, 6);
+      // legs and tail behind the shell
+      for (const [x, y] of [[24, 60], [84, 60]]) s += c.paint(c.blob(x, y, 9, 8), skin, { sw: 2.2, texture: false });
+      s += c.paint(c.poly([[92, 52], [106, 56], [92, 60]], { r: 3 }), skin, { sw: 2, texture: false });
+      // head with a pale snout, eye and smile
+      s += c.paint(c.blob(100, 44, 10, 9), skin, { shade: '#8DB06A' });
+      s += `<circle cx="103" cy="41" r="2.6" fill="${P.ink}"/><circle cx="103.8" cy="40.2" r="0.9" fill="#fff"/>`;
+      s += c.ink('M98 48 q4 3 8 0', { w: 1.6 });
+      // shell: a dome with hexagonal scutes and a highlight
+      s += c.paint(c.blob(52, 44, 40, 30, { n: 14, j: 0.03 }), shell, { shade: shellDeep });
+      for (const [x, y] of [[52, 40], [40, 46], [64, 46], [46, 56], [58, 56], [52, 30]]) {
+        s += c.ink(c.poly([[x - 6, y], [x - 3, y - 5], [x + 3, y - 5], [x + 6, y], [x + 3, y + 5], [x - 3, y + 5]], { r: 1 }).d, { w: 1.6, color: shellDeep, opacity: 0.8 });
+      }
+      s += c.ink('M26 30 q14 -10 30 -8', { w: 3, color: '#FFFFFF', opacity: 0.6 });
+      return s;
+    },
+  },
+  {
+    key: 'fish', dir: 'characters', w: 100, h: 64,
+    draw: (c) => {
+      const scale = '#7CC6E6', deep = '#4E9FC6', belly = '#EAF8FF', fin = '#F58F83';
+      let s = '';
+      // tail fin with a lighter inner edge
+      s += c.paint(c.poly([[78, 32], [98, 12], [94, 32], [98, 52]], { r: 5 }), fin, { sw: 2.4, texture: false, shade: '#D0655C' });
+      // body: an oval with a pale belly and a shaded back
+      s += c.paint(c.blob(44, 32, 36, 22, { n: 12, j: 0.03 }), scale, { shade: deep });
+      s += c.flat(c.blob(42, 40, 26, 7), belly, 0.85);
+      // scales as small arcs
+      for (let i = 0; i < 6; i++) for (let j = 0; j < 2; j++) s += c.ink(`M${f(26 + i * 8 + j * 4)} ${f(28 + j * 6)} q3 -3 6 0`, { w: 1.2, color: deep, opacity: 0.55 });
+      // top fin and side fin
+      s += c.paint(c.poly([[36, 12], [48, 6], [54, 12]], { r: 3 }), fin, { sw: 2, texture: false, highlight: false });
+      s += c.paint(c.poly([[44, 40], [54, 50], [46, 46]], { r: 3 }), fin, { sw: 1.8, texture: false, highlight: false });
+      // eye with glint and a smile
+      s += `<circle cx="22" cy="28" r="4.6" fill="${P.white}" stroke="${P.ink}" stroke-width="1.6"/><circle cx="23" cy="28.6" r="2.6" fill="${P.ink}"/><circle cx="24" cy="27.4" r="0.9" fill="#fff"/>`;
+      s += c.ink('M12 38 q6 3 10 -1', { w: 1.6, color: P.ink, opacity: 0.8 });
+      // gill line
+      s += c.ink('M32 22 q4 10 0 20', { w: 1.6, color: deep, opacity: 0.6 });
+      // a soft highlight along the top
+      s += c.ink('M26 18 q14 -6 30 -2', { w: 3, color: '#FFFFFF', opacity: 0.6 });
       return s;
     },
   },

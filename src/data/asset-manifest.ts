@@ -825,6 +825,18 @@ export const ASSET_MANIFEST = {
     "h": 60,
     "dir": "characters"
   },
+  "turtle": {
+    "path": "assets/characters/turtle.svg",
+    "w": 110,
+    "h": 80,
+    "dir": "characters"
+  },
+  "fish": {
+    "path": "assets/characters/fish.svg",
+    "w": 100,
+    "h": 64,
+    "dir": "characters"
+  },
   "rainbow": {
     "path": "assets/effects/rainbow.svg",
     "w": 900,
