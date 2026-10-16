@@ -128,6 +128,8 @@ function townScene(c) {
   s += grassTufts(c, -BX, W + BX, ls + 80, H + BY - 10, 40);
   s += tinyFlowers(c, -BX, W + BX, ls + 80, H + BY - 20, 40);
   s += tinyFlowers(c, -BX, W + BX, 580, 680, 26);
+  // a row of little bushes along the upper sidewalk
+  for (let x = 40; x < W; x += 210) s += place(c, 'bush_plain', x + c.jit(20), 548, 0.55);
   return s;
 }
 
@@ -197,6 +199,15 @@ function workshopScene(c) {
   s += c.ink('M60 900 q20 -30 40 0 t40 0 t40 0', { w: 3, color: P.coralDeep, opacity: 0.5 });
   s += c.ink(c.star(1500, 920, 26, 12).d, { w: 3, color: P.lavDeep, opacity: 0.5 });
   s += c.ink(c.heart(90, 80, 22).d, { w: 3, color: P.coralDeep, opacity: 0.45 });
+  // desk clutter kept outside the paper: a ruler, shavings, paper scraps and crayon marks
+  s += c.paint(c.rect(-60, 330, 330, 48, 8), '#F4E9C8', { shade: '#DCCD9E', sw: 2.6, texture: false, highlight: false });
+  for (let x = -40; x < 260; x += 30) s += c.ink(`M${x} 330 v${x % 60 ? 14 : 22}`, { w: 2.4, color: P.inkSoft, opacity: 0.6 });
+  for (const [x, y, r, col] of [[1420, 220, -0.4, P.pink], [1450, 280, 0.3, P.sky], [60, 560, 0.6, P.sun], [110, 610, -0.2, P.leaf], [1400, 620, 0.9, P.coral]]) {
+    s += c.paint(c.rect(x - 36, y - 26, 72, 50, 4, 0.6), col, { sw: 2.6, texture: false, highlight: false });
+  }
+  for (const [x, y] of [[1500, 470], [1540, 548]]) s += c.paint(c.poly([[x - 40, y], [x, y - 14], [x + 40, y], [x, y + 14]], { r: 4 }), P.wood, { sw: 2.6, texture: false, highlight: false });
+  s += c.ink('M1180 760 q30 -10 60 4 t60 -2 t50 6', { w: 5, color: P.lavDeep, opacity: 0.45 });
+  s += c.ink('M-30 720 q40 14 80 -6 t80 4', { w: 4, color: P.leafDeep, opacity: 0.4 });
   return s;
 }
 

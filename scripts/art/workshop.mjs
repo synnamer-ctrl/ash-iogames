@@ -11,8 +11,12 @@ function sticker(c, w, h, artShape, fill, extra = '') {
 }
 
 function cutShape(c, s) {
-  // white paper shapes that the game tints to any color
-  return `<g transform="translate(2 4)" opacity=".16"><path d="${s.d}" fill="${P.ink}"/></g>` + c.paint(s, '#FFFFFF', { shade: '#E4E0D8', pencilColor: '#C9C2B4', pencilOpacity: 0.25 });
+  // white paper shapes that the game tints to any color: a soft edge highlight and paper grain
+  const id = c.uid('ps');
+  return `<g transform="translate(2 4)" opacity=".16"><path d="${s.d}" fill="${P.ink}"/></g>` +
+    c.paint(s, '#FFFFFF', { shade: '#E4E0D8', pencilColor: '#C9C2B4', pencilOpacity: 0.25 }) +
+    `<clipPath id="${id}"><path d="${s.d}"/></clipPath><g clip-path="url(#${id})" opacity=".55"><path d="${s.d}" fill="none" stroke="#FFFFFF" stroke-width="7" transform="translate(-3 -3)"/></g>` +
+    c.pencil(s.bbox, { color: '#B9B1A0', opacity: 0.12, density: 0.5, angle: 25 });
 }
 
 export const assets = [
