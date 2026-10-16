@@ -315,36 +315,46 @@ export const assets = [
   {
     key: 'hedgehog', dir: 'characters', w: 110, h: 74,
     draw: (c) => {
-      const brown = '#8F6A4F', brownDeep = '#5E4330', tip = '#4A3426', cream = '#FBEBD3', pink = '#F4A7A0';
-      let s = c.groundShadow(54, 68, 40, 5);
-      // one body shape, head merged into it on the right
-      s += c.paint(c.blob(56, 44, 36, 25, { n: 14, j: 0.025 }), brown, { shade: brownDeep });
-      s += c.paint(c.blob(88, 40, 18, 17, { n: 12, j: 0.025 }), brown, { shade: brownDeep, highlight: false });
-      // dense spikes: short tapered cones on the back, pointing up and back
-      for (let i = 0; i < 16; i++) {
-        const t = i / 15;
-        const a = Math.PI * 1.08 + t * Math.PI * 0.52;
-        const rx = 33 + (i % 2 ? 2 : -1), ry = 23 + (i % 2 ? 1 : -1);
-        const bx = 58 + Math.cos(a) * rx, by = 44 + Math.sin(a) * ry;
-        const len = 12 + (1 - Math.abs(t - 0.45)) * 6;
-        const tx = bx + Math.cos(a) * len, ty = by + Math.sin(a) * len;
-        const nx = -Math.sin(a) * 4, ny = Math.cos(a) * 4;
-        s += c.paint(c.poly([[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]], { r: 1.5 }), brownDeep, { sw: 1.8, texture: false, highlight: false });
-        s += c.ink(`M${f(tx)} ${f(ty)} l${f(-Math.cos(a) * 3)} ${f(-Math.sin(a) * 3)}`, { w: 2, color: tip, opacity: 0.9 });
+      // real hedgehog anatomy, cartoon rendering: spiny brown back, pale face and belly, dark mask, pointed snout
+      const coat = '#8C6A52', coatDeep = '#5E4333', band = '#EAD7B8', belly = '#F3E3C8', mask = '#4A3328', nose = '#2A1F1A';
+      let s = c.groundShadow(54, 68, 42, 5);
+      // short legs with claws, behind the body
+      for (const x of [34, 48, 72, 86]) {
+        s += c.paint(c.rect(x - 5, 54, 10, 14, 5, 0.2), belly, { sw: 2.2, texture: false, shade: '#D9C3A0' });
+        s += c.ink(`M${x - 3} 67 l-1 3 M${x} 67 v3 M${x + 3} 67 l1 3`, { w: 1.2, color: '#8F7458', opacity: 0.9 });
       }
-      // cream face patch and belly, blended into the body (no outline)
-      s += c.flat(c.blob(82, 44, 13, 12, { n: 10, j: 0.03 }), cream, 0.95);
-      s += c.flat(c.blob(60, 58, 18, 9, { n: 10, j: 0.04 }), cream, 0.8);
-      // eye with glint, cheek, and a dark button nose
-      s += `<ellipse cx="88" cy="36" rx="3" ry="3.6" fill="${P.ink}"/><circle cx="89" cy="34.8" r="1" fill="#fff"/>`;
-      s += `<ellipse cx="82" cy="46" rx="3.6" ry="2.3" fill="${pink}" opacity=".6"/>`;
-      s += `<ellipse cx="99" cy="42" rx="3.2" ry="2.8" fill="${P.ink}"/><ellipse cx="98.2" cy="41" rx="1" ry="0.7" fill="#fff"/>`;
-      s += c.ink('M95 47 q2.5 2 5 -1', { w: 1.3, color: P.ink, opacity: 0.8 });
-      // small front feet with toes
-      for (const x of [70, 84]) {
-        s += c.flat(c.blob(x, 66, 7, 4.5), cream, 1);
-        s += c.ink(`M${x - 2} 67 v-2 M${x + 2} 67 v-2`, { w: 1, color: '#A87E62', opacity: 0.8 });
+      // body: a low spiny dome
+      s += c.paint(c.blob(56, 42, 38, 24, { n: 14, j: 0.025 }), coat, { shade: coatDeep });
+      // spines: rows of short cartoon quills, each with a pale band near the tip
+      for (let row = 0; row < 3; row++) {
+        const rx = 36 - row * 5, ry = 22 - row * 3.5;
+        const count = 12 - row;
+        for (let i = 0; i < count; i++) {
+          const a = Math.PI * 1.06 + ((i + row * 0.5) / count) * Math.PI * 0.78;
+          const bx = 56 + Math.cos(a) * rx, by = 42 + Math.sin(a) * ry;
+          const len = 10 - row * 1.5;
+          const tx = bx + Math.cos(a - 0.2) * len, ty = by + Math.sin(a - 0.2) * len;
+          const nx = -Math.sin(a) * 3.2, ny = Math.cos(a) * 3.2;
+          s += c.paint(c.poly([[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]], { r: 1.2 }), coatDeep, { sw: 1.6, texture: false, highlight: false });
+          s += c.ink(`M${f(bx + (tx - bx) * 0.5)} ${f(by + (ty - by) * 0.5)} l${f(Math.cos(a - 0.2) * 1.5)} ${f(Math.sin(a - 0.2) * 1.5)}`, { w: 2, color: band, opacity: 0.95 });
+        }
       }
+      // pale face and belly
+      s += c.paint(c.blob(84, 46, 15, 13, { n: 12, j: 0.03 }), belly, { shade: '#DCC6A4' });
+      s += c.paint(c.blob(70, 58, 14, 7, { n: 10, j: 0.03 }), belly, { sw: 1.8, texture: false, highlight: false });
+      // dark mask over the eyes
+      s += c.flat(c.blob(90, 40, 8, 6, { n: 9, j: 0.03 }), mask, 0.9);
+      // small rounded ear
+      s += c.paint(c.blob(80, 28, 5, 4.5, { n: 8 }), '#6B4B38', { sw: 2, texture: false, highlight: false });
+      s += c.ink('M79 28 q1 -2 2 0', { w: 1, color: '#B98B70', opacity: 0.8 });
+      // pointed snout ending in a dark nose
+      s += c.paint(c.poly([[92, 40], [106, 47], [98, 52], [90, 50]], { r: 3 }), belly, { sw: 2.2, texture: false, highlight: false });
+      s += `<ellipse cx="106" cy="47" rx="2.4" ry="2" fill="${nose}"/><circle cx="105.2" cy="46.4" r="0.7" fill="#fff" opacity=".7"/>`;
+      // cartoon eye with glint and a blush
+      s += `<ellipse cx="91" cy="39" rx="3.1" ry="3.6" fill="${P.ink}"/><circle cx="92" cy="37.8" r="1.1" fill="#fff"/>`;
+      s += `<ellipse cx="88" cy="46" rx="3.2" ry="2.1" fill="#F4A7A0" opacity=".55"/>`;
+      // tiny whisker bristles
+      s += c.ink('M99 49 l5 -1 M99 51 l5 1', { w: 1, color: coatDeep, opacity: 0.6 });
       return s;
     },
   },
