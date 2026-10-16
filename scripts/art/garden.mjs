@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { P, LINE, darken, lighten, fmt as f } from './lib.mjs';
 
 const SOIL = '#9B6B4C', SOIL_DEEP = '#7A5038';
@@ -95,6 +96,8 @@ function butterfly(c, w, h, wing, spot) {
   out += `<circle cx="${f(w / 2 - 11)}" cy="${f(h * 0.2 - 10)}" r="1.8" fill="${P.ink}"/><circle cx="${f(w / 2 + 11)}" cy="${f(h * 0.2 - 10)}" r="1.8" fill="${P.ink}"/>`;
   return out;
 }
+
+const HEDGEHOG_PNG = readFileSync(new URL('../../assets-src/hedgehog-web-2.png', import.meta.url)).toString('base64');
 
 export const assets = [
   {
@@ -313,65 +316,9 @@ export const assets = [
     },
   },
   {
-    // redrawn to match the hand-drawn reference: thick brown outlines, speckled fur, cream-tipped spikes, cream muzzle, pink ear and cheek
+    // the user's own hedgehog drawing (background removed, see assets-src/hedgehog-web-2.png); embedded as a PNG inside the SVG
     key: 'hedgehog', dir: 'characters', w: 110, h: 74,
-    draw: (c) => {
-      const brown = '#A0683F', brownDeep = '#6A4026', ink = '#4A2C1C', cream = '#FBF1DC', creamShade = '#EBD6B0', tip = '#F5E0BC', pink = '#F4A09A', cheek = '#F29C9C';
-      const cx = 56, cy = 44, rx = 35, ry = 22;
-      let s = c.groundShadow(58, 70, 44, 4);
-      // spike: a pointed shape from the body edge, outlined; cream tip on the outer third
-      const spike = (a, len, w) => {
-        const bx = cx + Math.cos(a) * rx, by = cy + Math.sin(a) * ry;
-        const d = a - 0.22;
-        const tx = bx + Math.cos(d) * len, ty = by + Math.sin(d) * len;
-        const nx = -Math.sin(d) * w, ny = Math.cos(d) * w;
-        const pts = [[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]];
-        const shape = c.poly(pts, { r: 1.4 });
-        let o = c.paint(shape, brown, { shade: brownDeep, sw: 1.4, texture: false, highlight: false, stroke: false });
-        const mx = bx + (tx - bx) * 0.5, my = by + (ty - by) * 0.5;
-        o += c.flat(c.poly([[tx, ty], [mx + nx * 0.9, my + ny * 0.9], [mx - nx * 0.9, my - ny * 0.9]], { r: 0.6 }), tip, 0.97);
-        o += c.ink(`M${bx + nx} ${by + ny} L${tx} ${ty} L${bx - nx} ${by - ny}`, { w: 2.4, color: ink });
-        return o;
-      };
-      // back spikes first, then the body covers their roots, then the front spikes
-      for (let i = 0; i < 8; i++) s += spike(Math.PI * (1.14 + i * 0.1), 19 + (i % 2) * 3, 6);
-      // legs behind the body
-      for (const x of [34, 72]) {
-        s += c.paint(c.rect(x - 6, 54, 12, 14, 5, 0.3), cream, { sw: 2.4, shade: creamShade, texture: false, stroke: false });
-        s += c.ink(`M${x - 6} 56 v12 q0 4 4 4 h4 q4 0 4 -4 v-12`, { w: 2.2, color: ink });
-        for (const dx of [-3, 0, 3]) s += c.ink(`M${x + dx} 66 v3`, { w: 1.4, color: ink });
-      }
-      // body with speckled fur
-      s += c.paint(c.blob(cx, cy, rx, ry, { n: 16, j: 0.03 }), brown, { shade: brownDeep, sw: 2.8, texture: false, stroke: false });
-      s += c.ink(c.blob(cx, cy, rx, ry, { n: 16, j: 0.03 }), { w: 2.8, color: ink });
-      for (let i = 0; i < 16; i++) {
-        const x = 24 + ((i * 37) % 52), y = 30 + ((i * 23) % 26);
-        s += `<ellipse cx="${x}" cy="${y}" rx="${1.4 + (i % 3) * 0.4}" ry="1" fill="${brownDeep}" opacity=".7"/>`;
-      }
-      // cream head: fuzzy edge on the muzzle
-      s += c.paint(c.blob(86, 47, 16, 15, { n: 16, j: 0.05 }), cream, { shade: creamShade, sw: 1.6, texture: false, stroke: false });
-      s += c.paint(c.blob(100, 49, 9, 7, { n: 12, j: 0.04 }), cream, { shade: creamShade, sw: 1.6, texture: false, stroke: false });
-      s += c.ink(c.blob(86, 47, 16, 15, { n: 16, j: 0.05 }), { w: 2.4, color: ink });
-      s += c.ink(c.blob(100, 49, 9, 7, { n: 12, j: 0.04 }), { w: 2.2, color: ink });
-      // round ear with pink inside
-      s += c.paint(c.blob(74, 33, 7, 7, { n: 10 }), brown, { sw: 2, texture: false, highlight: false, shade: brownDeep });
-      s += c.flat(c.blob(74, 33, 4, 4, { n: 8 }), pink, 0.95);
-      // big eye with highlight
-      s += `<ellipse cx="92" cy="42" rx="4.6" ry="5.4" fill="${ink}"/><circle cx="93.4" cy="40.2" r="1.7" fill="#fff"/>`;
-      // blush, smile, dot nose on a pointed snout
-      s += `<ellipse cx="88" cy="54" rx="3.6" ry="2.6" fill="${cheek}" opacity=".85"/>`;
-      s += c.ink('M92 57 q5 3 10 -2', { w: 1.8, color: ink });
-            s += `<circle cx="106" cy="46" r="3.2" fill="${ink}"/><circle cx="105" cy="44.8" r="1" fill="#fff"/>`;
-      // front feet with toes
-      for (const x of [60, 96]) {
-        s += c.paint(c.blob(x, 66, 8, 5.5), cream, { sw: 2.2, shade: creamShade, texture: false, stroke: false });
-        s += c.ink(c.blob(x, 66, 8, 5.5), { w: 2, color: ink });
-        for (const dx of [-3, 0, 3]) s += c.ink(`M${x + dx} 68 v2`, { w: 1.4, color: ink });
-      }
-      // front spikes along the shoulder, over the body edge
-      for (let i = 0; i < 4; i++) s += spike(Math.PI * (1.22 + i * 0.1), 15, 5);
-      return s;
-    },
+    draw: () => `<image x="0" y="0" width="110" height="74" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,${HEDGEHOG_PNG}"/>`,
   },
   {
     key: 'hedgehog_ball', dir: 'characters', w: 84, h: 74,
