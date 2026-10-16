@@ -315,32 +315,35 @@ export const assets = [
   {
     key: 'hedgehog', dir: 'characters', w: 110, h: 74,
     draw: (c) => {
-      const back = '#8A6A55', backDeep = '#6B4F3D', spikeTip = '#F1E4CF', cream = '#FBEBD3', pink = '#F4A7A0';
+      const brown = '#8F6A4F', brownDeep = '#5E4330', tip = '#4A3426', cream = '#FBEBD3', pink = '#F4A7A0';
       let s = c.groundShadow(54, 68, 40, 5);
-      // sitting body: a rounded bean, cream belly on the front
-      s += c.paint(c.blob(50, 44, 36, 26, { n: 12, j: 0.03 }), back, { shade: backDeep });
-      s += c.flat(c.blob(64, 52, 18, 16, { n: 10, j: 0.04 }), cream, 0.95);
-      // spikes: separate tapered cones standing up along the back, cream tips
-      for (let i = 0; i < 9; i++) {
-        const t = i / 8;
-        const a = Math.PI * 1.08 + t * Math.PI * 0.86;
-        const bx = 50 + Math.cos(a) * 32, by = 44 + Math.sin(a) * 24;
-        const tx = 50 + Math.cos(a) * 46, ty = 44 + Math.sin(a) * 36;
-        const nx = -Math.sin(a) * 5, ny = Math.cos(a) * 5;
-        s += c.paint(c.poly([[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]], { r: 2 }), backDeep, { sw: 1.8, texture: false, highlight: false });
-        s += c.ink(`M${f(tx)} ${f(ty)} l${f(-Math.cos(a) * 3)} ${f(-Math.sin(a) * 3)}`, { w: 2.2, color: spikeTip, opacity: 0.85 });
+      // one body shape, head merged into it on the right
+      s += c.paint(c.blob(56, 44, 36, 25, { n: 14, j: 0.025 }), brown, { shade: brownDeep });
+      s += c.paint(c.blob(88, 40, 18, 17, { n: 12, j: 0.025 }), brown, { shade: brownDeep, highlight: false });
+      // dense spikes: short tapered cones on the back, pointing up and back
+      for (let i = 0; i < 16; i++) {
+        const t = i / 15;
+        const a = Math.PI * 1.08 + t * Math.PI * 0.52;
+        const rx = 33 + (i % 2 ? 2 : -1), ry = 23 + (i % 2 ? 1 : -1);
+        const bx = 58 + Math.cos(a) * rx, by = 44 + Math.sin(a) * ry;
+        const len = 12 + (1 - Math.abs(t - 0.45)) * 6;
+        const tx = bx + Math.cos(a) * len, ty = by + Math.sin(a) * len;
+        const nx = -Math.sin(a) * 4, ny = Math.cos(a) * 4;
+        s += c.paint(c.poly([[bx + nx, by + ny], [tx, ty], [bx - nx, by - ny]], { r: 1.5 }), brownDeep, { sw: 1.8, texture: false, highlight: false });
+        s += c.ink(`M${f(tx)} ${f(ty)} l${f(-Math.cos(a) * 3)} ${f(-Math.sin(a) * 3)}`, { w: 2, color: tip, opacity: 0.9 });
       }
-      // head: a round cream face on the front-right
-      s += c.paint(c.blob(86, 38, 18, 17, { n: 11, j: 0.03 }), cream, { shade: '#E8CFAE' });
-      // eye with glint, a rosy cheek and a dark button nose
-      s += `<ellipse cx="90" cy="34" rx="3.2" ry="3.8" fill="${P.ink}"/><circle cx="91" cy="32.8" r="1.1" fill="#fff"/>`;
-      s += `<ellipse cx="82" cy="44" rx="4" ry="2.5" fill="${pink}" opacity=".6"/>`;
-      s += `<ellipse cx="101" cy="40" rx="3.6" ry="3" fill="${P.ink}"/><ellipse cx="100" cy="38.8" rx="1.1" ry="0.8" fill="#fff"/>`;
-      s += c.ink('M96 45 q3 2 6 -1', { w: 1.4, color: P.ink, opacity: 0.8 });
-      // tiny front paws with toes
-      for (const x of [76, 90]) {
-        s += c.paint(c.blob(x, 66, 7, 4.5), cream, { sw: 1.8, texture: false });
-        s += c.ink(`M${x - 2} 67 v-2 M${x + 2} 67 v-2`, { w: 1, color: '#B9977A', opacity: 0.8 });
+      // cream face patch and belly, blended into the body (no outline)
+      s += c.flat(c.blob(82, 44, 13, 12, { n: 10, j: 0.03 }), cream, 0.95);
+      s += c.flat(c.blob(60, 58, 18, 9, { n: 10, j: 0.04 }), cream, 0.8);
+      // eye with glint, cheek, and a dark button nose
+      s += `<ellipse cx="88" cy="36" rx="3" ry="3.6" fill="${P.ink}"/><circle cx="89" cy="34.8" r="1" fill="#fff"/>`;
+      s += `<ellipse cx="82" cy="46" rx="3.6" ry="2.3" fill="${pink}" opacity=".6"/>`;
+      s += `<ellipse cx="99" cy="42" rx="3.2" ry="2.8" fill="${P.ink}"/><ellipse cx="98.2" cy="41" rx="1" ry="0.7" fill="#fff"/>`;
+      s += c.ink('M95 47 q2.5 2 5 -1', { w: 1.3, color: P.ink, opacity: 0.8 });
+      // small front feet with toes
+      for (const x of [70, 84]) {
+        s += c.flat(c.blob(x, 66, 7, 4.5), cream, 1);
+        s += c.ink(`M${x - 2} 67 v-2 M${x + 2} 67 v-2`, { w: 1, color: '#A87E62', opacity: 0.8 });
       }
       return s;
     },
