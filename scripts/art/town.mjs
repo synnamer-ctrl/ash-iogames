@@ -283,20 +283,31 @@ function person(c, w, h, cfg) {
   out += c.paint(c.rect(w / 2 - 18, h - 50, 14, 40, 6, 0.4), legs, { sw: 2.4, texture: false });
   out += c.paint(c.rect(w / 2 + 4, h - 50, 14, 40, 6, 0.4), legs, { sw: 2.4, texture: false });
   const boot = kind === 'kid' ? P.coralDeep : P.woodDark;
-  out += c.paint(c.rect(w / 2 - 22, h - 18, 20, 13, 6, 0.3), boot, { sw: 2.4, texture: false });
-  out += c.paint(c.rect(w / 2 + 2, h - 18, 20, 13, 6, 0.3), boot, { sw: 2.4, texture: false });
+  // rounded shoes with a toe, a sole line and a little shine
+  for (const x of [w / 2 - 22, w / 2 + 2]) {
+    out += c.paint(c.poly([[x, h - 24], [x + 22, h - 24], [x + 24, h - 9], [x - 2, h - 5], [x - 3, h - 15]], { r: 6, j: 0.3 }), boot, { sw: 2.4 });
+    out += c.ink(`M${f(x + 2)} ${f(h - 8)} h${f(20)}`, { w: 1.6, color: P.ink, opacity: 0.5 });
+    out += c.ink(`M${f(x + 3)} ${f(h - 20)} q4 -3 9 -2`, { w: 1.8, color: '#FFFFFF', opacity: 0.6 });
+  }
   // left arm (static)
   out += c.paint(c.rect(w / 2 - 38, 96, 16, 52, 8, 0.4), coat, { sw: 2.4, texture: false });
-  out += c.paint(c.blob(w / 2 - 30, 150, 8, 8), skin, { sw: 2.2, texture: false });
+  // mitten-shaped hand with a thumb
+  out += c.paint(c.poly([[w / 2 - 38, 146], [w / 2 - 24, 146], [w / 2 - 22, 160], [w / 2 - 30, 164], [w / 2 - 40, 160]], { r: 5 }), skin, { sw: 2.2, texture: false });
+  out += c.paint(c.blob(w / 2 - 42, 150, 4, 5), skin, { sw: 1.6, texture: false, highlight: false });
   // coat
   const coatS = kind === 'kid'
     ? c.poly([[w / 2 - 26, 88], [w / 2 + 26, 88], [w / 2 + 36, h - 44], [w / 2 - 36, h - 44]], { r: 12, j: 0.8 })
     : c.poly([[w / 2 - 26, 88], [w / 2 + 26, 88], [w / 2 + 40, h - 30], [w / 2 - 40, h - 30]], { r: 12, j: 0.8 });
   out += c.paint(coatS, coat, {});
+  // shade down the right side and a soft fold or two
+  out += c.flat(c.poly([[w / 2 + 12, 92], [w / 2 + 30, 92], [w / 2 + 38, h - 40], [w / 2 + 18, h - 40]], { r: 8 }), darken(coat, 0.2), 0.28);
+  out += c.ink(`M${w / 2 - 12} ${h - 110} q6 14 2 30 M${w / 2 - 4} ${h - 96} q5 10 0 22`, { w: 1.8, color: darken(coat, 0.35), opacity: 0.45 });
   if (kind === 'kid') {
     out += c.ink(`M${w / 2} 96 L${w / 2} ${h - 48}`, { w: 2, opacity: 0.6 });
     for (const y of [110, 130]) out += `<circle cx="${w / 2 + 7}" cy="${y}" r="3" fill="${P.ink}" opacity=".7"/>`;
   } else {
+    // lace collar and a brooch
+    out += c.ink(`M${w / 2 - 22} 90 q6 8 12 0 q4 8 10 0 q4 8 10 0 q4 8 10 0 q6 -8 12 0`, { w: 2.2, color: P.white, opacity: 0.95 });
     out += c.ink(`M${w / 2 - 20} ${h - 64} q20 8 40 0`, { w: 2, color: darken(coat, 0.3), opacity: 0.6 });
     out += c.paint(c.blob(w / 2 + 12, 120, 8, 6), P.cream, { sw: 1.8, texture: false });
   }
@@ -305,15 +316,19 @@ function person(c, w, h, cfg) {
   if (kind === 'kid') {
     out += c.paint(c.blob(w / 2, hy, 33, 32), skin, {});
     out += c.paint(c.poly([[w / 2 - 36, hy - 4], [w / 2 - 28, hy - 30], [w / 2, hy - 38], [w / 2 + 28, hy - 30], [w / 2 + 36, hy - 4], [w / 2 + 18, hy - 18], [w / 2 - 6, hy - 14]], { r: 10, j: 1 }), hair, { sw: 2.6 });
+    out += c.ink(`M${w / 2 - 24} ${hy - 28} q10 -8 20 -4`, { w: 2.6, color: '#FFFFFF', opacity: 0.55 });
     // little rain hat brim
     out += c.paint(c.poly([[w / 2 - 40, hy - 18], [w / 2 - 20, hy - 46], [w / 2 + 22, hy - 46], [w / 2 + 42, hy - 18]], { r: 12, j: 0.6 }), coat, { sw: 2.6 });
     out += c.face(w / 2, hy + 4, 1.15, {});
+    out += c.ink(`M${w / 2 - 14} ${hy - 6} q5 -3 9 -1 M${w / 2 + 5} ${hy - 7} q5 -2 9 1`, { w: 1.8, color: P.ink, opacity: 0.6 });
   } else {
     out += c.paint(c.blob(w / 2 + 4, hy - 36, 14, 12), hair, { sw: 2.4 });
     out += c.paint(c.blob(w / 2, hy, 31, 32), skin, {});
     out += c.paint(c.poly([[w / 2 - 32, hy - 2], [w / 2 - 26, hy - 26], [w / 2, hy - 34], [w / 2 + 26, hy - 26], [w / 2 + 32, hy - 2], [w / 2 + 14, hy - 18], [w / 2 - 14, hy - 18]], { r: 10, j: 1 }), hair, { sw: 2.6 });
     out += c.face(w / 2, hy + 4, 1.15, {});
     out += c.ink(c.blob(w / 2 - 13, hy + 4, 9, 8, { n: 10, j: 0.01 }), { w: 2 }) + c.ink(c.blob(w / 2 + 13, hy + 4, 9, 8, { n: 10, j: 0.01 }), { w: 2 }) + c.ink(`M${w / 2 - 4} ${hy + 3} h8`, { w: 2 });
+    out += c.ink(`M${w / 2 - 14} ${hy - 14} q6 -4 12 -1 M${w / 2 + 4} ${hy - 15} q6 -3 12 1`, { w: 1.8, color: '#7A7A8A', opacity: 0.7 });
+    out += c.flat(c.blob(w / 2 - 22, hy + 14, 5, 3.5), P.coral, 0.45) + c.flat(c.blob(w / 2 + 22, hy + 14, 5, 3.5), P.coral, 0.45);
   }
   return out;
 }
