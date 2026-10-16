@@ -170,13 +170,37 @@ export const assets = [
   {
     key: 'duck', dir: 'characters', w: 124, h: 92,
     draw: (c) => {
-      let s = c.paint(c.blob(56, 60, 48, 24), P.white, { shade: '#E6E1D3' });
-      s += c.paint(c.poly([[14, 52], [4, 34], [26, 46]], { r: 4 }), P.white, { sw: 2.4, texture: false, shade: '#E6E1D3' });
-      s += c.paint(c.blob(92, 30, 22, 21), P.white, { shade: '#E6E1D3' });
-      s += c.paint(c.poly([[108, 30], [122, 34], [108, 40]], { r: 4 }), P.orange, { sw: 2.2, texture: false });
-      s += `<ellipse cx="98" cy="25" rx="3.4" ry="4.2" fill="${P.ink}"/><circle cx="99" cy="23.4" r="1.2" fill="#fff"/><ellipse cx="100" cy="36" rx="4" ry="2.6" fill="${P.coral}" opacity=".5"/>`;
-      s += c.ink('M40 58 q14 10 30 0', { w: 2.4, opacity: 0.6 });
-      s += c.ink(c.line([[6, 78], [110, 80]], { j: 1.4 }), { w: 3, color: P.waterDeep, opacity: 0.8 });
+      // a mallard: green head, white collar, chestnut breast, grey-brown body
+      const bodyCol = '#B9B3A6', bodyDeep = '#948E82', green = '#2F8F6B', breast = '#8A4E2E';
+      let s = '';
+      // water ripples behind and under the duck
+      s += c.ink(c.line([[4, 80], [118, 82]], { j: 1.2 }), { w: 3, color: P.waterDeep, opacity: 0.7 });
+      s += c.ink(c.blob(62, 80, 52, 6, { n: 12, j: 0.04 }).d, { w: 1.6, color: P.white, opacity: 0.8 });
+      // tail: a little upturned curl
+      s += c.paint(c.poly([[18, 48], [4, 30], [10, 26], [26, 42]], { r: 4 }), '#3F3A34', { sw: 2.2, texture: false });
+      // body in two tones: grey-brown back, chestnut breast
+      s += c.paint(c.blob(58, 60, 44, 22, { n: 12, j: 0.035 }), bodyCol, { shade: bodyDeep });
+      s += c.paint(c.blob(88, 56, 16, 17, { n: 10, j: 0.04 }), breast, { sw: 2.2, texture: false, shade: '#6B3A20' });
+      // blue speculum on the wing with white edge
+      s += c.paint(c.poly([[40, 52], [64, 48], [70, 56], [46, 60]], { r: 4 }), '#4C7FB5', { sw: 2, texture: false, highlight: false });
+      s += c.ink('M40 60 q14 -4 30 -6', { w: 1.6, color: P.white, opacity: 0.9 });
+      // wing curves
+      s += c.ink('M32 64 q16 6 34 -2 M36 70 q14 4 28 -4', { w: 1.6, color: bodyDeep, opacity: 0.7 });
+      // white neck ring
+      s += c.paint(c.blob(86, 42, 9, 6, { n: 9, j: 0.03 }), P.white, { sw: 2, texture: false, highlight: false });
+      // green head with a shine
+      s += c.paint(c.blob(94, 26, 19, 18, { n: 12, j: 0.035 }), green, { shade: '#21674E' });
+      s += c.flat(c.blob(90, 20, 8, 4, { rot: -0.3 }), '#8ED3B2', 0.8);
+      // orange-yellow bill with a nail
+      s += c.paint(c.poly([[106, 26], [120, 30], [116, 35], [106, 34]], { r: 3 }), P.sunDeep, { sw: 2.2, texture: false, highlight: false });
+      s += c.flat(c.poly([[116, 30], [120, 30], [116, 35]], { r: 1 }), '#FFE9A3', 0.9);
+      // eye with a glint and a soft brow
+      s += `<ellipse cx="98" cy="22" rx="3.4" ry="4" fill="${P.ink}"/><circle cx="99.2" cy="20.6" r="1.2" fill="#fff"/>`;
+      s += c.ink('M92 16 q5 -3 10 0', { w: 1.5, color: '#21674E', opacity: 0.7 });
+      // cheek blush
+      s += `<ellipse cx="100" cy="34" rx="4" ry="2.5" fill="${P.coral}" opacity=".35"/>`;
+      // floating-on-water: a soft shadow and a little splash line at the waterline
+      s += c.ink('M28 80 q6 -3 12 0 M80 81 q6 -3 12 0', { w: 1.6, color: P.white, opacity: 0.9 });
       return s;
     },
   },
@@ -244,17 +268,37 @@ export const assets = [
   {
     key: 'rabbit', dir: 'characters', w: 100, h: 124,
     draw: (c) => {
-      const fur = '#F4EEE4', deep = '#DCD2C2';
+      const fur = '#F4EEE4', deep = '#DCD2C2', inner = '#F8B9C4';
       let s = c.groundShadow(50, 118, 34, 6);
+      // ears: shaded outside, pink inside, with a curve
       for (const x of [36, 64]) {
         s += c.paint(c.rect(x - 9, 4, 18, 50, 9), fur, { sw: 2.4, texture: false, shade: deep });
-        s += c.flat(c.rect(x - 4, 12, 8, 34, 4, 0.3), P.pink, 0.9);
+        s += c.flat(c.rect(x - 4, 12, 8, 34, 4, 0.3), inner, 0.95);
+        s += c.ink(`M${x - 6} 12 q-2 14 0 30`, { w: 1.4, color: deep, opacity: 0.6 });
       }
+      // body with a soft belly patch and a fluffy tail
       s += c.paint(c.blob(50, 92, 32, 26), fur, { shade: deep });
+      s += c.flat(c.blob(50, 98, 16, 12), '#FFFFFF', 0.7);
+      s += c.paint(c.blob(74, 102, 7, 6), '#FFFFFF', { sw: 1.8, texture: false, highlight: false });
+      // head with a fluff highlight and cheek blush
       s += c.paint(c.blob(50, 58, 25, 22), fur, { shade: deep });
-      s += c.face(50, 58, 0.9, {});
-      s += `<ellipse cx="50" cy="64" rx="3" ry="2.2" fill="${P.coral}"/>`;
-      s += c.paint(c.blob(36, 114, 10, 5), fur, { sw: 2, texture: false }) + c.paint(c.blob(64, 114, 10, 5), fur, { sw: 2, texture: false });
+      s += c.flat(c.blob(44, 46, 10, 5), '#FFFFFF', 0.8);
+      // big round eyes with glints
+      for (const x of [41, 59]) {
+        s += `<ellipse cx="${x}" cy="55" rx="3.4" ry="4.2" fill="${P.ink}"/><circle cx="${x + 1}" cy="53.6" r="1.2" fill="#fff"/>`;
+      }
+      s += `<ellipse cx="36" cy="63" rx="4.5" ry="2.8" fill="${P.coral}" opacity=".45"/><ellipse cx="64" cy="63" rx="4.5" ry="2.8" fill="${P.coral}" opacity=".45"/>`;
+      // pink nose and a small mouth with two teeth
+      s += `<path d="M47 62 L53 62 L50 66 Z" fill="${P.coral}" stroke="#A8534B" stroke-width="1.2"/>`;
+      s += c.ink('M50 66 q-3 3 -6 1 M50 66 q3 3 6 1', { w: 1.4, color: P.ink, opacity: 0.8 });
+      s += c.paint(c.rect(47, 67, 3, 3, 1), P.white, { sw: 0.8, texture: false, highlight: false }) + c.paint(c.rect(50, 67, 3, 3, 1), P.white, { sw: 0.8, texture: false, highlight: false });
+      // whiskers
+      s += c.ink('M30 64 l-14 -2 M30 68 l-14 2 M70 64 l14 -2 M70 68 l14 2', { w: 1.2, color: P.ink, opacity: 0.6 });
+      // front paws with toes
+      for (const x of [36, 64]) {
+        s += c.paint(c.blob(x, 114, 10, 5), fur, { sw: 2, texture: false });
+        s += c.ink(`M${x - 4} 115 v-2 M${x} 115 v-2 M${x + 4} 115 v-2`, { w: 1, color: deep, opacity: 0.8 });
+      }
       return s;
     },
   },
